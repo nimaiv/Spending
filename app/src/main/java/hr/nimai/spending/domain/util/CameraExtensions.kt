@@ -1,7 +1,6 @@
 package hr.nimai.spending.domain.util
 
 import android.content.Context
-import android.media.Image
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException

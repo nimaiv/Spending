@@ -29,7 +29,6 @@ fun RacuniScreen(
 ) {
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,

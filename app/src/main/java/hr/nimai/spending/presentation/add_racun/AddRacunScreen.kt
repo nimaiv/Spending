@@ -14,6 +14,8 @@ fun AddRacunScreen(
     navigator: DestinationsNavigator,
     viewModel: AddRacunViewModel = hiltViewModel()
 ) {
+
+
     Surface {
         Text(text = ocrText)
     }
