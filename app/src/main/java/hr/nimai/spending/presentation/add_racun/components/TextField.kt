@@ -2,6 +2,7 @@ package hr.nimai.spending.presentation.add_racun.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -11,17 +12,16 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun TextField(
     text: String,
-    hint: String,
+    label: String,
     modifier: Modifier = Modifier,
-    isHintVisible: Boolean = true,
     onValueChange: (String) -> Unit,
     textStyle: TextStyle = TextStyle(),
-    singleLine: Boolean = false,
-    onFocusChange: (FocusState) -> Unit
+    singleLine: Boolean = false
 ) {
     Box(
         modifier = modifier
@@ -32,15 +32,11 @@ fun TextField(
             onValueChange = onValueChange,
             singleLine = singleLine,
             textStyle = textStyle,
+            label = {
+                Text(text = label)
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .onFocusChanged {
-                    onFocusChange(it)
-                }
         )
-        if(isHintVisible) {
-            Text(text = hint, style = textStyle, color = Color.DarkGray)
-        }
-
     }
 }

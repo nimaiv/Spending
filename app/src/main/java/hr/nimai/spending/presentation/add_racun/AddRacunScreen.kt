@@ -6,11 +6,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import hr.nimai.spending.presentation.destinations.RacuniScreenDestination
+import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -28,6 +31,20 @@ fun AddRacunScreen(
 
     val scaffoldState = rememberScaffoldState()
 
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is AddRacunViewModel.UiEvent.SaveRacun -> {
+                    navigator.navigate(RacuniScreenDestination)
+                }
+                is AddRacunViewModel.UiEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = event.message
+                    )
+                }
+            }
+        }
+    }
     
     Scaffold(
         floatingActionButton = {
@@ -49,72 +66,52 @@ fun AddRacunScreen(
         ) {
             hr.nimai.spending.presentation.add_racun.components.TextField(
                 text = brojRacunaState.text,
-                hint = brojRacunaState.hint,
+                label = brojRacunaState.label,
                 onValueChange = {
                     viewModel.onEvent(AddRacunEvent.EnteredBrojRacuna(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddRacunEvent.ChangeBrojRacunaFocus(it))
-                },
-                isHintVisible = brojRacunaState.isHintVisible,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.h5
             )
             Spacer(modifier = Modifier.height(16.dp))
             hr.nimai.spending.presentation.add_racun.components.TextField(
                 text = ukupanIznosState.text,
-                hint = ukupanIznosState.hint,
+                label = ukupanIznosState.label,
                 onValueChange = {
                     viewModel.onEvent(AddRacunEvent.EnteredUkupanIznos(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddRacunEvent.ChangeUkupanIznosFocus(it))
-                },
-                isHintVisible = ukupanIznosState.isHintVisible,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.h5
+                textStyle = MaterialTheme.typography.h5,
+                singleLine = true
             )
             Spacer(modifier = Modifier.height(16.dp))
             hr.nimai.spending.presentation.add_racun.components.TextField(
                 text = datumRacunaState.text,
-                hint = datumRacunaState.hint,
+                label = datumRacunaState.label,
                 onValueChange = {
                     viewModel.onEvent(AddRacunEvent.EnteredDatumRacuna(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddRacunEvent.ChangeDatumRacunaFocus(it))
-                },
-                isHintVisible = datumRacunaState.isHintVisible,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.h5
+                textStyle = MaterialTheme.typography.h5,
+                singleLine = true
             )
             Spacer(modifier = Modifier.height(16.dp))
             hr.nimai.spending.presentation.add_racun.components.TextField(
                 text = idTrgovineState.text,
-                hint = idTrgovineState.hint,
+                label = idTrgovineState.label,
                 onValueChange = {
                     viewModel.onEvent(AddRacunEvent.EnteredTrgovina(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddRacunEvent.ChangeTrgovinaFocus(it))
-                },
-                isHintVisible = idTrgovineState.isHintVisible,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.h5
+                textStyle = MaterialTheme.typography.h5,
+                singleLine = true
             )
             Spacer(modifier = Modifier.height(16.dp))
             hr.nimai.spending.presentation.add_racun.components.TextField(
                 text = ocrTekstState.text,
-                hint = ocrTekstState.hint,
+                label = ocrTekstState.label,
+                modifier = Modifier.fillMaxHeight(),
                 onValueChange = {
 
                 },
-                onFocusChange = {
-
-                },
-                isHintVisible = ocrTekstState.isHintVisible,
                 textStyle = MaterialTheme.typography.body1,
-                modifier = Modifier.fillMaxHeight(),
 
             )
         }

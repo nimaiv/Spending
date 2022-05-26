@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 fun getTodayDate(): String {
-    val c = Calendar.getInstance().getTime()
+    val c = Calendar.getInstance().time
     val sdf = SimpleDateFormat("dd.MM.yyyy.", Locale.GERMANY)
     return sdf.format(c)
 }

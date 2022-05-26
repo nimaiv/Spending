@@ -16,6 +16,9 @@ class InsertRacun(
         if(racun.ukupan_iznos_racuna.isNaN()) {
             throw InvalidRacunException("Ukupan iznos računa nije valjan")
         }
+        if(!racun.datum_racuna.matches(Regex("""\d\d\.\d\d\.\d\d\d\d\."""))) {
+            throw InvalidRacunException("Format datuma nije valjdan (dd.MM.yyyy.)")
+        }
         repository.insertRacun(racun)
     }
 }

@@ -21,27 +21,27 @@ class AddRacunViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _brojRacuna = mutableStateOf(RacunTextFieldState(
-        hint = "Broj računa"
+        label = "Broj računa"
     ))
     val brojRacuna: State<RacunTextFieldState> = _brojRacuna
 
     private val _idTrgovine = mutableStateOf(RacunTextFieldState(
-        hint = "Trgovina"
+        label = "Trgovina"
     ))
     val idTrgovine: State<RacunTextFieldState> = _idTrgovine
 
     private val _ukupanIznos = mutableStateOf(RacunTextFieldState(
-        hint = "Ukupan iznos"
+        label = "Ukupan iznos"
     ))
     val ukupanIznos: State<RacunTextFieldState> = _ukupanIznos
 
     private val _datumRacuna = mutableStateOf(RacunTextFieldState(
-        hint = "Datum računa"
+        label = "Datum računa"
     ))
     val datumRacuna: State<RacunTextFieldState> = _datumRacuna
 
     private val _ocrTekst = mutableStateOf(RacunTextFieldState(
-        hint = "Tekst skeniranog računa"
+        label = "Tekst skeniranog računa"
     ))
     val ocrTekst: State<RacunTextFieldState> = _ocrTekst
 
@@ -53,46 +53,22 @@ class AddRacunViewModel @Inject constructor(
         val ocrText = savedStateHandle.get<String>("ocrText")
         val racun = addRacunUseCases.readOCRToRacun(ocrText!!)
         _brojRacuna.value = brojRacuna.value.copy(
-            text = racun.broj_racuna,
-            isHintVisible = false
+            text = racun.broj_racuna
         )
         _ukupanIznos.value = ukupanIznos.value.copy(
-            text = racun.ukupan_iznos_racuna.toString(),
-            isHintVisible = false
+            text = racun.ukupan_iznos_racuna.toString()
         )
         _datumRacuna.value = datumRacuna.value.copy(
-            text = racun.datum_racuna,
-            isHintVisible = false
+            text = racun.datum_racuna
         )
         _ocrTekst.value = ocrTekst.value.copy(
-            text = racun.ocr_tekst!!,
-            isHintVisible = false
+            text = racun.ocr_tekst!!
         )
 
     }
 
     fun onEvent(event: AddRacunEvent) {
         when (event) {
-            is AddRacunEvent.ChangeBrojRacunaFocus -> {
-                _brojRacuna.value = brojRacuna.value.copy(
-                    isHintVisible = !event.focusState.isFocused && brojRacuna.value.text.isBlank()
-                )
-            }
-            is AddRacunEvent.ChangeDatumRacunaFocus -> {
-                _datumRacuna.value = datumRacuna.value.copy(
-                    isHintVisible = !event.focusState.isFocused && datumRacuna.value.text.isBlank()
-                )
-            }
-            is AddRacunEvent.ChangeTrgovinaFocus -> {
-                _idTrgovine.value = idTrgovine.value.copy(
-                    isHintVisible = !event.focusState.isFocused && idTrgovine.value.text.isBlank()
-                )
-            }
-            is AddRacunEvent.ChangeUkupanIznosFocus -> {
-                _ukupanIznos.value = ukupanIznos.value.copy(
-                    isHintVisible = !event.focusState.isFocused && ukupanIznos.value.text.isBlank()
-                )
-            }
             is AddRacunEvent.EnteredBrojRacuna -> {
                 _brojRacuna.value = brojRacuna.value.copy(
                     text = event.value
@@ -120,7 +96,7 @@ class AddRacunViewModel @Inject constructor(
                             Racun(
                                 id_racuna = 0,
                                 broj_racuna = brojRacuna.value.text,
-                                id_trgovine = idTrgovine.value.text.toInt(),
+                                id_trgovine = idTrgovine.value.text.toIntOrNull(),
                                 ukupan_iznos_racuna = ukupanIznos.value.text.toDouble(),
                                 datum_racuna = datumRacuna.value.text,
                                 ocr_tekst = ocrTekst.value.text
