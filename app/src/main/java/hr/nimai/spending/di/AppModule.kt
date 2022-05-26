@@ -55,7 +55,8 @@ object AppModule {
     @Singleton
     fun provideAddRacunUseCases(repository: RacunRepository): AddRacunUseCases {
         return AddRacunUseCases(
-            insertRacun = InsertRacun(repository)
+            insertRacun = InsertRacun(repository),
+            readOCRToRacun = ReadOCRToRacun()
         )
     }
 

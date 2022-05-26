@@ -3,6 +3,7 @@ package hr.nimai.spending.presentation.add_racun.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +26,8 @@ fun TextField(
     Box(
         modifier = modifier
     ) {
-        BasicTextField(
+
+        OutlinedTextField(
             value = text,
             onValueChange = onValueChange,
             singleLine = singleLine,
