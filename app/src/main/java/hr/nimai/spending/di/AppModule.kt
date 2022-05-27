@@ -56,7 +56,8 @@ object AppModule {
     fun provideAddRacunUseCases(repository: RacunRepository): AddRacunUseCases {
         return AddRacunUseCases(
             insertRacun = InsertRacun(repository),
-            readOCRToRacun = ReadOCRToRacun()
+            readOCRToRacun = ReadOCRToRacun(),
+            extractProductInfoFromOCR = ExtractProductInfoFromOCR()
         )
     }
 

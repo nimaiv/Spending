@@ -21,7 +21,8 @@ fun TextField(
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
     textStyle: TextStyle = TextStyle(),
-    singleLine: Boolean = false
+    singleLine: Boolean = false,
+    maxLines: Int = 10
 ) {
     Box(
         modifier = modifier
@@ -36,7 +37,8 @@ fun TextField(
                 Text(text = label)
             },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            maxLines = maxLines
         )
     }
 }
