@@ -17,6 +17,10 @@ class ProizvodRepositoryImpl(
         return dao.getProizvodById(id)
     }
 
+    override suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun insertProizvod(proizvod: Proizvod) {
         return dao.insertProizvod(proizvod)
     }

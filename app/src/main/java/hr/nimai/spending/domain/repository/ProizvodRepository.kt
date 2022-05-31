@@ -9,6 +9,8 @@ interface ProizvodRepository {
 
     suspend fun getProizvodById(id: Int): Proizvod?
 
+    suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod?
+
     suspend fun insertProizvod(proizvod: Proizvod)
 
     suspend fun updateProizvod(proizvod: Proizvod)

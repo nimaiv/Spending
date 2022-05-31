@@ -1,29 +1,30 @@
 package hr.nimai.spending.presentation.add_racun
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import hr.nimai.spending.presentation.add_racun.components.EditProizvodDialog
 import hr.nimai.spending.presentation.add_racun.components.ProizvodItem
-import hr.nimai.spending.presentation.destinations.RacunProizvodiScreenDestination
 import hr.nimai.spending.presentation.destinations.RacuniScreenDestination
-import hr.nimai.spending.presentation.racuni.RacuniEvent
-import hr.nimai.spending.presentation.racuni.components.RacunItem
 import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -40,9 +41,9 @@ fun AddRacunScreen(
     val datumRacunaState = viewModel.datumRacuna.value
     val ocrTekstState = viewModel.ocrTekst.value
     val proizvodiState = viewModel.proizvodiState.value
+    val dialogState = viewModel.dialogState.value
 
     val scaffoldState = rememberScaffoldState()
-
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -132,8 +133,8 @@ fun AddRacunScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -141,19 +142,10 @@ fun AddRacunScreen(
                             text = "Proizvodi:",
                             style = MaterialTheme.typography.h5
                         )
-                        IconButton(
-                            onClick = {
-                                // TODO: Add onClick function
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add, contentDescription = "Dodaj"
-                            )
-                        }
                     }
                 }
             }
-            items(proizvodiState.proizvodi) { proizvod ->
+            itemsIndexed(proizvodiState) { index, proizvod ->
                 ProizvodItem(
                     naziv = proizvod.naziv_proizvoda,
                     cijena = proizvod.cijena,
@@ -161,10 +153,50 @@ fun AddRacunScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            /* TODO: Add enlargement to edit */
+                            viewModel.onEvent(
+                                AddRacunEvent.OpenDialog(
+                                    proizvod = proizvod,
+                                    id = index
+                                )
+                            )
                         },
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Button(
+                        onClick = {
+                            /*TODO*/
+                        },
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    {
+                        Text(text = "Dodaj postojeći")
+                    }
+                    Button(
+                        onClick = {
+                            // TODO: Add onClick function
+                        },
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Text(text = "Dodaj novi")
+                    }
+                }
             }
         }
+        if (dialogState.isDialogOpen) {
+            EditProizvodDialog(
+                dialogState = dialogState,
+                viewModel = viewModel
+            )
+        }
+
     }
 }

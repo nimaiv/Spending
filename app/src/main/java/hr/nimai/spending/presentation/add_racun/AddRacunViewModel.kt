@@ -1,7 +1,7 @@
 package hr.nimai.spending.presentation.add_racun
 
+import android.widget.Toast
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hr.nimai.spending.domain.model.InvalidRacunException
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.use_case.AddRacunUseCases
+import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -56,8 +57,17 @@ class AddRacunViewModel @Inject constructor(
     )
     val ocrTekst: State<RacunTextFieldState> = _ocrTekst
 
-    private val _proizvodiState = mutableStateOf(ProizvodiState())
-    val proizvodiState: State<ProizvodiState> = _proizvodiState
+    private val _proizvodiState = mutableStateOf<List<ProizvodKupnjaHolder>>(emptyList())
+    val proizvodiState: State<List<ProizvodKupnjaHolder>> = _proizvodiState
+
+    private val _dialogState = mutableStateOf(
+        DialogState(
+            isDialogOpen = false,
+            id = null
+        )
+    )
+    val dialogState: State<DialogState> = _dialogState
+
 
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -79,9 +89,8 @@ class AddRacunViewModel @Inject constructor(
         _ocrTekst.value = ocrTekst.value.copy(
             text = racun.ocr_tekst!!
         )
-        _proizvodiState.value = proizvodiState.value.copy(
-            proizvodi = addRacunUseCases.extractProductInfoFromOCR(ocrText)
-        )
+        _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
+
     }
 
     fun onEvent(event: AddRacunEvent) {
@@ -106,7 +115,82 @@ class AddRacunViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            AddRacunEvent.SaveRacun -> {
+            is AddRacunEvent.OpenDialog -> {
+                _dialogState.value = dialogState.value.copy(
+                    isDialogOpen = true,
+                    id = event.id,
+                    nazivProizvoda = event.proizvod.naziv_proizvoda,
+                    skraceniNazivProizvoda = event.proizvod.skraceni_naziv_proizvoda,
+                    cijenaProizvoda = event.proizvod.cijena.toString(),
+                    kolicinaProizvoda = event.proizvod.kolicina.toString()
+                )
+            }
+            is AddRacunEvent.DismissDialog -> {
+                _dialogState.value = dialogState.value.copy(
+                    isDialogOpen = false
+                )
+            }
+            is AddRacunEvent.EnteredCijenaProizvoda -> {
+                if (event.value.toDoubleOrNull() == null) {
+                    _dialogState.value = _dialogState.value.copy(
+                        cijenaProizvoda = event.value,
+                        isCijenaError = true
+                    )
+                }
+                else {
+                    _dialogState.value = dialogState.value.copy(
+                        cijenaProizvoda = event.value,
+                        isCijenaError = false,
+                        showErrorMessage = false
+                    )
+                }
+            }
+            is AddRacunEvent.EnteredKolicinaProizvoda -> {
+                if (event.value.toIntOrNull() == null) {
+                    _dialogState.value = _dialogState.value.copy(
+                        kolicinaProizvoda = event.value,
+                        isKolicinaError = true,
+                    )
+                }
+                else {
+                    _dialogState.value = dialogState.value.copy(
+                        kolicinaProizvoda = event.value,
+                        isKolicinaError = false,
+                        showErrorMessage = false
+                    )
+                }
+            }
+            is AddRacunEvent.EnteredNazivProizvoda -> {
+                _dialogState.value = dialogState.value.copy(
+                    nazivProizvoda = event.value
+                )
+            }
+            is AddRacunEvent.EnteredSkraceniNazivProizvoda -> {
+                _dialogState.value = dialogState.value.copy(
+                    skraceniNazivProizvoda = event.value
+                )
+            }
+            is AddRacunEvent.EditProizvodValues -> {
+                if (dialogState.value.isCijenaError || dialogState.value.isKolicinaError) {
+                    _dialogState.value = dialogState.value.copy(
+                        showErrorMessage = true
+                    )
+                } else {
+                    val proizvodi = proizvodiState.value.toMutableList()
+                    val proizvod = ProizvodKupnjaHolder(
+                        naziv_proizvoda = dialogState.value.nazivProizvoda,
+                        skraceni_naziv_proizvoda = dialogState.value.skraceniNazivProizvoda,
+                        cijena = dialogState.value.cijenaProizvoda.toDouble(),
+                        kolicina = dialogState.value.kolicinaProizvoda.toInt()
+                    )
+                    proizvodi[dialogState.value.id!!] = proizvod
+                    _proizvodiState.value = proizvodi
+                    _dialogState.value = dialogState.value.copy(
+                        isDialogOpen = false
+                    )
+                }
+            }
+            is AddRacunEvent.SaveRacun -> {
                 viewModelScope.launch {
                     try {
                         addRacunUseCases.insertRacun(

@@ -12,6 +12,9 @@ interface ProizvodDao {
     @Query("SELECT * FROM proizvod WHERE id_proizvoda = :id")
     suspend fun getProizvodById(id: Int): Proizvod?
 
+    @Query("SELECT * FROM proizvod WHERE skraceni_naziv_proizvoda = :skraceniNazivProizvoda")
+    suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProizvod(proizvod: Proizvod)
 
