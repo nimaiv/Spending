@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 
 @Composable
-fun TextField(
+fun RacunTextField(
     text: String,
     label: String,
     modifier: Modifier = Modifier,

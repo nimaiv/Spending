@@ -16,7 +16,7 @@ interface ProizvodDao {
     suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertProizvod(proizvod: Proizvod)
+    suspend fun insertProizvod(proizvod: Proizvod): Long
 
     @Update
     suspend fun updateProizvod(proizvod: Proizvod)

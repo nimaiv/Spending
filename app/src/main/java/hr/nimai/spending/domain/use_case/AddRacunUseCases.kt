@@ -4,4 +4,5 @@ data class AddRacunUseCases(
     val insertRacun: InsertRacun,
     val readOCRToRacun: ReadOCRToRacun,
     val extractProductInfoFromOCR: ExtractProductInfoFromOCR,
+    val insertProizvodiKupnja: InsertProizvodiKupnja
 )

@@ -21,7 +21,7 @@ class ProizvodRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertProizvod(proizvod: Proizvod) {
+    override suspend fun insertProizvod(proizvod: Proizvod): Long {
         return dao.insertProizvod(proizvod)
     }
 

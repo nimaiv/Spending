@@ -17,5 +17,5 @@ data class Kupnja(
     val id_proizvoda: Int,
     val id_racuna: Int,
     val kolicina: Int = 1,
-    val cijena: Int = 0,
+    val cijena: Double = 0.00,
 )

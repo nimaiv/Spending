@@ -1,6 +1,5 @@
 package hr.nimai.spending.presentation.add_racun.components
 
-import android.graphics.fonts.Font
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -8,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
 import hr.nimai.spending.presentation.add_racun.AddRacunEvent
 import hr.nimai.spending.presentation.add_racun.AddRacunViewModel
 import hr.nimai.spending.presentation.add_racun.DialogState
@@ -31,7 +29,7 @@ fun EditProizvodDialog(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
-                TextField(
+                RacunTextField(
                     text = dialogState.nazivProizvoda,
                     label = "Naziv proizvoda",
                     onValueChange = {
@@ -40,7 +38,7 @@ fun EditProizvodDialog(
                     textStyle = MaterialTheme.typography.body1,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                RacunTextField(
                     text = dialogState.skraceniNazivProizvoda,
                     label = "Skraćeni naziv proizvoda",
                     onValueChange = {
@@ -49,7 +47,7 @@ fun EditProizvodDialog(
                     textStyle = MaterialTheme.typography.body1,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                RacunTextField(
                     text = dialogState.cijenaProizvoda,
                     label = "Cijena proizvoda",
                     onValueChange = {
@@ -59,7 +57,7 @@ fun EditProizvodDialog(
                     isError = dialogState.isCijenaError
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                RacunTextField(
                     text = dialogState.kolicinaProizvoda,
                     label = "Količina",
                     onValueChange = {

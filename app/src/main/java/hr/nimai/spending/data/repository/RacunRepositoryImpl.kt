@@ -17,7 +17,7 @@ class RacunRepositoryImpl(
         return dao.getRacunById(id)
     }
 
-    override suspend fun insertRacun(racun: Racun) {
+    override suspend fun insertRacun(racun: Racun): Long {
         return dao.insertRacun(racun)
     }
 

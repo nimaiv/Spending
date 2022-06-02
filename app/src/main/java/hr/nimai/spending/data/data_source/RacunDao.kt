@@ -13,7 +13,7 @@ interface RacunDao {
     suspend fun getRacunById(id: Int): Racun?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRacun(racun: Racun)
+    suspend fun insertRacun(racun: Racun): Long
 
     @Update
     suspend fun updateRacun(racun: Racun)

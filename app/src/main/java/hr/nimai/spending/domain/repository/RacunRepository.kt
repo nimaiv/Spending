@@ -9,7 +9,7 @@ interface RacunRepository {
 
     suspend fun getRacunById(id: Int): Racun?
 
-    suspend fun insertRacun(racun: Racun)
+    suspend fun insertRacun(racun: Racun): Long
 
     suspend fun updateRacun(racun: Racun)
 

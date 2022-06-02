@@ -9,7 +9,7 @@ class InsertRacun(
 ) {
 
     @Throws(InvalidRacunException::class)
-    suspend operator fun invoke(racun: Racun) {
+    suspend operator fun invoke(racun: Racun): Int {
         if(racun.broj_racuna.isBlank()) {
             throw InvalidRacunException("Broj računa ne smije biti prazan.")
         }
@@ -19,6 +19,6 @@ class InsertRacun(
         if(!racun.datum_racuna.matches(Regex("""\d\d\.\d\d\.\d\d\d\d\."""))) {
             throw InvalidRacunException("Format datuma nije valjdan (dd.MM.yyyy.)")
         }
-        repository.insertRacun(racun)
+        return repository.insertRacun(racun).toInt()
     }
 }

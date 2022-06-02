@@ -8,8 +8,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import hr.nimai.spending.data.data_source.SpendingDatabase
-import hr.nimai.spending.data.repository.RacunRepositoryImpl
-import hr.nimai.spending.domain.repository.RacunRepository
+import hr.nimai.spending.data.repository.*
+import hr.nimai.spending.domain.repository.*
 import hr.nimai.spending.domain.use_case.*
 import javax.inject.Singleton
 
@@ -35,6 +35,36 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideProizvodRepository(db: SpendingDatabase): ProizvodRepository {
+        return ProizvodRepositoryImpl(db.proizvodDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideKupnjaRepository(db: SpendingDatabase): KupnjaRepository {
+        return KupnjaRepositoryImpl(db.kupnjaDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideTipProizvodaRepository(db: SpendingDatabase): TipProizvodaRepository {
+        return TipProizvodaRepositoryImpl(db.tipProizvodaDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideTrgovinaRepository(db: SpendingDatabase): TrgovinaRepository {
+        return TrgovinaRepositoryImpl(db.trgovinaDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideFransizaRepository(db: SpendingDatabase): FransizaRepository {
+        return FransizaRepositoryImpl(db.fransizaDao())
+    }
+
+    @Provides
+    @Singleton
     fun provideRacunUseCases(repository: RacunRepository): RacunUseCases {
         return RacunUseCases(
             getRacuni = GetRacuni(repository),
@@ -53,11 +83,26 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAddRacunUseCases(repository: RacunRepository): AddRacunUseCases {
+    fun provideAddRacunUseCases(
+        racunRepository: RacunRepository,
+        proizvodRepository: ProizvodRepository,
+        kupnjaRepository: KupnjaRepository
+    ): AddRacunUseCases {
         return AddRacunUseCases(
-            insertRacun = InsertRacun(repository),
+            insertRacun = InsertRacun(racunRepository),
             readOCRToRacun = ReadOCRToRacun(),
-            extractProductInfoFromOCR = ExtractProductInfoFromOCR()
+            extractProductInfoFromOCR = ExtractProductInfoFromOCR(proizvodRepository),
+            insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProizvodiUseCases(
+        proizvodRepository: ProizvodRepository
+    ): ProizvodiUseCases {
+        return ProizvodiUseCases(
+            getProizvodi = GetProizvodi(proizvodRepository)
         )
     }
 

@@ -1,5 +1,6 @@
 package hr.nimai.spending.presentation.add_racun
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -89,8 +90,11 @@ class AddRacunViewModel @Inject constructor(
         _ocrTekst.value = ocrTekst.value.copy(
             text = racun.ocr_tekst!!
         )
-        _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
 
+        viewModelScope.launch {
+            Log.d("ENTER_EXTRACT", "ulaz u extraxt")
+            _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
+        }
     }
 
     fun onEvent(event: AddRacunEvent) {
@@ -193,7 +197,7 @@ class AddRacunViewModel @Inject constructor(
             is AddRacunEvent.SaveRacun -> {
                 viewModelScope.launch {
                     try {
-                        addRacunUseCases.insertRacun(
+                        val idRacuna = addRacunUseCases.insertRacun(
                             Racun(
                                 id_racuna = 0,
                                 broj_racuna = brojRacuna.value.text,
@@ -202,6 +206,10 @@ class AddRacunViewModel @Inject constructor(
                                 datum_racuna = datumRacuna.value.text,
                                 ocr_tekst = ocrTekst.value.text
                             )
+                        )
+                        addRacunUseCases.insertProizvodiKupnja(
+                            proizvodi = proizvodiState.value,
+                            idRacuna = idRacuna
                         )
                         _eventFlow.emit(UiEvent.SaveRacun)
                     } catch (e: InvalidRacunException) {

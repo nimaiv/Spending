@@ -11,7 +11,7 @@ interface ProizvodRepository {
 
     suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod?
 
-    suspend fun insertProizvod(proizvod: Proizvod)
+    suspend fun insertProizvod(proizvod: Proizvod): Long
 
     suspend fun updateProizvod(proizvod: Proizvod)
 

@@ -2,6 +2,7 @@
     <string name="app_name">Spending</string>
     <string name="racuni_screen">Računi</string>
     <string name="scan_screen">Skeniraj</string>
+    <string name="proizvodi_screen">Proizvodi</string>
     <string name="exit_camera_view_content_description">Exit</string>
     <string name="camera_view_take_photo_content_description">Take photo</string>
     <string name="cameta_view_load_from_gallery_content_description">View Gallery</string>
