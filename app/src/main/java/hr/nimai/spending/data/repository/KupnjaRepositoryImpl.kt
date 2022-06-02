@@ -17,6 +17,10 @@ class KupnjaRepositoryImpl(
         return dao.getKupnjaByIds(id_racuna = id_racuna, id_proizvoda = id_proizvoda)
     }
 
+    override suspend fun getKupnjeByIdProizvoda(id_proizvoda: Int): List<Kupnja> {
+        return dao.getKupnjeByIdProizvoda(id_proizvoda = id_proizvoda)
+    }
+
     override suspend fun insertKupnja(kupnja: Kupnja) {
         return dao.insertKupnja(kupnja)
     }

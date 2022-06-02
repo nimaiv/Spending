@@ -7,6 +7,8 @@ interface TipProizvodaRepository {
 
     fun getAll(): Flow<List<TipProizvoda>>
 
+    suspend fun getAllSuspend(): List<TipProizvoda>
+
     suspend fun getTipProizvodaById(id: Int): TipProizvoda?
 
     suspend fun insertTipProizvoda(tipProizvoda: TipProizvoda)

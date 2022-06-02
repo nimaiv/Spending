@@ -17,3 +17,5 @@ data class Proizvod(
     val uri_slike: String? = null,
     val tip_proizvoda: Int? = null,
 )
+
+class NoProizvodWithIDException(message: String): Exception(message)

@@ -9,6 +9,8 @@ interface KupnjaRepository {
 
     suspend fun getKupnjaById(id_racuna: Int, id_proizvoda: Int): Kupnja?
 
+    suspend fun getKupnjeByIdProizvoda(id_proizvoda: Int): List<Kupnja>
+
     suspend fun insertKupnja(kupnja: Kupnja)
 
     suspend fun updateKupnja(kupnja: Kupnja)

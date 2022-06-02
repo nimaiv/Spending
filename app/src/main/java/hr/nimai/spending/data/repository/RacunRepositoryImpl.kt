@@ -28,4 +28,8 @@ class RacunRepositoryImpl(
     override suspend fun deleteRacun(racun: Racun) {
         return dao.deleteRacun(racun)
     }
+
+    override suspend fun getDatum(idRacuna: Int): String {
+        return dao.getDatum(idRacuna)
+    }
 }

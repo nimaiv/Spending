@@ -106,4 +106,19 @@ object AppModule {
         )
     }
 
+    @Provides
+    @Singleton
+    fun provideProizvodViewUseCases(
+        proizvodRepository: ProizvodRepository,
+        kupnjaRepository: KupnjaRepository,
+        tipProizvodaRepository: TipProizvodaRepository,
+        racunRepository: RacunRepository
+    ): ProizvodViewUseCases {
+        return ProizvodViewUseCases(
+            getProizvod = GetProizvod(proizvodRepository),
+            getKupnjeProizvoda = GetKupnjeProizvoda(kupnjaRepository, racunRepository),
+            getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository)
+        )
+    }
+
 }

@@ -14,4 +14,6 @@ interface RacunRepository {
     suspend fun updateRacun(racun: Racun)
 
     suspend fun deleteRacun(racun: Racun)
+
+    suspend fun getDatum(idRacuna: Int): String
 }

@@ -13,6 +13,10 @@ class TipProizvodaRepositoryImpl(
         return dao.getAll()
     }
 
+    override suspend fun getAllSuspend(): List<TipProizvoda> {
+        return dao.getAllSuspend()
+    }
+
     override suspend fun getTipProizvodaById(id: Int): TipProizvoda? {
         return dao.getTipProizvodaById(id)
     }

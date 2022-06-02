@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import hr.nimai.spending.presentation.destinations.ProizvodViewScreenDestination
 import hr.nimai.spending.presentation.proizvodi.components.ProizvodItem
 
 @Composable
@@ -36,7 +37,7 @@ fun ProizvodiScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            /* TODO: Add navigation to proizvod screen */
+                            navigator.navigate(ProizvodViewScreenDestination(proizvod.id_proizvoda))
                         },
                 )
             }

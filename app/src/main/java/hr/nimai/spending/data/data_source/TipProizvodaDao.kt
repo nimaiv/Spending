@@ -10,6 +10,9 @@ interface TipProizvodaDao {
     @Query("SELECT * FROM tip_proizvoda")
     fun getAll(): Flow<List<TipProizvoda>>
 
+    @Query("SELECT * FROM tip_proizvoda")
+    suspend fun getAllSuspend(): List<TipProizvoda>
+
     @Query("SELECT * FROM tip_proizvoda WHERE id_tipa_proizvoda = :id")
     suspend fun getTipProizvodaById(id: Int): TipProizvoda?
 

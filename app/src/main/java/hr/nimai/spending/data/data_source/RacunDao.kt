@@ -20,4 +20,8 @@ interface RacunDao {
 
     @Delete
     suspend fun deleteRacun(racun: Racun)
+
+    @Query("SELECT datum_racuna FROM racun WHERE id_racuna = :idRacuna")
+    suspend fun getDatum(idRacuna: Int): String
+
 }
