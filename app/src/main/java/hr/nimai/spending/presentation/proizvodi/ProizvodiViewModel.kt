@@ -1,7 +1,9 @@
 package hr.nimai.spending.presentation.proizvodi
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +28,17 @@ class ProizvodiViewModel @Inject constructor(
         getProizvodi()
     }
 
-    fun onEvent(proizvodiEvent: ProizvodiEvent) {
-
+    fun onEvent(event: ProizvodiEvent) {
+        when (event) {
+            is ProizvodiEvent.OnSearchQueryChanged -> {
+                _state.value = state.value.copy(
+                    query = event.value,
+                    proizvodiShown = state.value.proizvodi.filter {
+                        it.naziv_proizvoda.contains(event.value, ignoreCase = true)
+                    }
+                )
+            }
+        }
     }
 
     private fun getProizvodi() {
@@ -35,7 +46,8 @@ class ProizvodiViewModel @Inject constructor(
         getProizvodiJob = proizvodiUseCases.getProizvodi()
             .onEach { proizvodi ->
                 _state.value = state.value.copy(
-                    proizvodi = proizvodi
+                    proizvodi = proizvodi,
+                    proizvodiShown = proizvodi
                 )
             }.launchIn(viewModelScope)
     }
