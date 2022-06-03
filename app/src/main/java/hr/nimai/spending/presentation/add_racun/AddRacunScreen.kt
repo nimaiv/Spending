@@ -14,11 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 import hr.nimai.spending.presentation.add_racun.components.EditProizvodDialog
 import hr.nimai.spending.presentation.add_racun.components.ProizvodItem
 import hr.nimai.spending.presentation.destinations.RacuniScreenDestination
+import hr.nimai.spending.presentation.destinations.SelectProizvodScreenDestination
 import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -27,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddRacunScreen(
     ocrText: String,
     navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<SelectProizvodScreenDestination, Int>,
     viewModel: AddRacunViewModel = hiltViewModel()
 ) {
     val brojRacunaState = viewModel.brojRacuna.value
@@ -52,6 +58,17 @@ fun AddRacunScreen(
                         message = event.message
                     )
                 }
+            }
+        }
+    }
+    
+    resultRecipient.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> {
+
+            }
+            is NavResult.Value -> {
+                viewModel.onEvent(AddRacunEvent.AddExistingProizvod(result.value))
             }
         }
     }
@@ -156,6 +173,9 @@ fun AddRacunScreen(
                                 )
                             )
                         },
+                    onDeletePress = {
+                        viewModel.onEvent(AddRacunEvent.DeleteProizvod(index))
+                    }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -169,7 +189,9 @@ fun AddRacunScreen(
                 ) {
                     Button(
                         onClick = {
-                            /*TODO*/
+                            navigator.navigate(SelectProizvodScreenDestination(
+                                proizvodiState.map { it.id_proizvoda }.toHashSet().toIntArray())
+                            )
                         },
                         modifier = Modifier.padding(4.dp)
                     )
@@ -178,7 +200,7 @@ fun AddRacunScreen(
                     }
                     Button(
                         onClick = {
-                            // TODO: Add onClick function
+                            viewModel.onEvent(AddRacunEvent.AddNewProizvodDialog)
                         },
                         modifier = Modifier.padding(4.dp)
                     ) {

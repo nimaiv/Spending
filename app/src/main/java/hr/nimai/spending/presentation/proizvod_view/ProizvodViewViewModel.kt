@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hr.nimai.spending.domain.model.Proizvod
 import hr.nimai.spending.domain.use_case.ProizvodViewUseCases
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -58,6 +59,44 @@ class ProizvodViewViewModel @Inject constructor(
                 _state.value = state.value.copy(
                     idTipaProizvoda = event.tipProizvoda.id_tipa_proizvoda,
                     nazivTipaProizvoda = event.tipProizvoda.naziv_tipa_proizvoda
+                )
+            }
+            is ProizvodViewEvent.ToggleEdit -> {
+                if (!state.value.isEditEnabled) {
+                    _state.value = state.value.copy(
+                        isEditEnabled = true,
+                        buttonText = "Spremi"
+                    )
+                } else {
+                    _state.value = state.value.copy(
+                        isEditEnabled = false,
+                        buttonText = "Uredi"
+                    )
+                    viewModelScope.launch {
+                        proizvodViewUseCases.insertProizvod(Proizvod(
+                            id_proizvoda = state.value.idProizvoda,
+                            naziv_proizvoda = state.value.nazivProizvoda,
+                            skraceni_naziv_proizvoda = state.value.skraceniNazivProizvoda,
+                            tip_proizvoda = state.value.idTipaProizvoda,
+                            barkod = state.value.barkod,
+                            uri_slike = state.value.uriSlikeProizvoda
+                        ))
+                    }
+                }
+            }
+            is ProizvodViewEvent.EnteredBarkod -> {
+                _state.value = state.value.copy(
+                    barkod = event.value
+                )
+            }
+            is ProizvodViewEvent.EnteredNazivProizvoda -> {
+                _state.value = state.value.copy(
+                    nazivProizvoda = event.value
+                )
+            }
+            is ProizvodViewEvent.EnteredSkraceniNazivProizvoda -> {
+                _state.value = state.value.copy(
+                    skraceniNazivProizvoda = event.value
                 )
             }
         }

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import hr.nimai.spending.presentation.destinations.RacunProizvodiScreenDestination
 import hr.nimai.spending.presentation.destinations.RacunScanScreenDestination
 import hr.nimai.spending.presentation.racuni.components.OrderSection
 import hr.nimai.spending.presentation.racuni.components.RacunItem
@@ -93,7 +94,7 @@ fun RacuniScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                /* TODO: Add navigation to racun screen */
+                                navigator.navigate(RacunProizvodiScreenDestination(racun.id_racuna))
                             },
                     )
                 }

@@ -1,6 +1,5 @@
 package hr.nimai.spending.presentation.add_racun
 
-import androidx.compose.ui.focus.FocusState
 import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
 
 sealed class AddRacunEvent {
@@ -12,8 +11,11 @@ sealed class AddRacunEvent {
     data class EnteredSkraceniNazivProizvoda(val value: String) : AddRacunEvent()
     data class EnteredCijenaProizvoda(val value: String) : AddRacunEvent()
     data class EnteredKolicinaProizvoda(val value: String) : AddRacunEvent()
-    object EditProizvodValues : AddRacunEvent()
     data class OpenDialog(val proizvod: ProizvodKupnjaHolder, val id: Int): AddRacunEvent()
+    data class AddExistingProizvod(val idProizvoda: Int): AddRacunEvent()
+    data class DeleteProizvod(val index: Int): AddRacunEvent()
+    object EditProizvodValues: AddRacunEvent()
+    object AddNewProizvodDialog: AddRacunEvent()
     object DismissDialog: AddRacunEvent()
     object SaveRacun: AddRacunEvent()
 }

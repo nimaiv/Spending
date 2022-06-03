@@ -13,12 +13,12 @@ class ProizvodRepositoryImpl(
         return dao.getAll()
     }
 
-    override suspend fun getProizvodById(id: Int): Proizvod? {
-        return dao.getProizvodById(id)
+    override suspend fun getAllSuspend(): List<Proizvod> {
+        return dao.getAllSuspend()
     }
 
-    override suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod? {
-        TODO("Not yet implemented")
+    override suspend fun getProizvodById(id: Int): Proizvod? {
+        return dao.getProizvodById(id)
     }
 
     override suspend fun insertProizvod(proizvod: Proizvod): Long {

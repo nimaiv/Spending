@@ -9,5 +9,6 @@ data class DialogState(
     val kolicinaProizvoda: String = "",
     val isCijenaError: Boolean = false,
     val isKolicinaError: Boolean = false,
-    val showErrorMessage: Boolean = false
+    val showErrorMessage: Boolean = false,
+    val isNew: Boolean = false,
 )

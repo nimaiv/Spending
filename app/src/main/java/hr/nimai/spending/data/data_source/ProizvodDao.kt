@@ -9,6 +9,9 @@ interface ProizvodDao {
     @Query("SELECT * FROM proizvod")
     fun getAll(): Flow<List<Proizvod>>
 
+    @Query("SELECT * FROM proizvod")
+    suspend fun getAllSuspend(): List<Proizvod>
+
     @Query("SELECT * FROM proizvod WHERE id_proizvoda = :id")
     suspend fun getProizvodById(id: Int): Proizvod?
 

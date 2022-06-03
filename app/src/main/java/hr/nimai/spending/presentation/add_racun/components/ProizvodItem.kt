@@ -18,6 +18,7 @@ fun ProizvodItem(
     cijena: Double,
     kolicina: Int,
     modifier: Modifier = Modifier,
+    onDeletePress: () -> Unit
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.primary,
@@ -49,7 +50,7 @@ fun ProizvodItem(
             )
             IconButton(
                 onClick = {
-                    // TODO: Add onClick function
+                    onDeletePress()
                 },
                 modifier = Modifier.align(Alignment.Bottom)
             ) {

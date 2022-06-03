@@ -92,7 +92,8 @@ object AppModule {
             insertRacun = InsertRacun(racunRepository),
             readOCRToRacun = ReadOCRToRacun(),
             extractProductInfoFromOCR = ExtractProductInfoFromOCR(proizvodRepository),
-            insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository)
+            insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository),
+            getProizvod = GetProizvod(proizvodRepository)
         )
     }
 
@@ -117,7 +118,19 @@ object AppModule {
         return ProizvodViewUseCases(
             getProizvod = GetProizvod(proizvodRepository),
             getKupnjeProizvoda = GetKupnjeProizvoda(kupnjaRepository, racunRepository),
-            getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository)
+            getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository),
+            insertProizvod = InsertProizvod(proizvodRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideRacunProizvodiUseCases(
+        racunRepository: RacunRepository,
+        proizvodRepository: ProizvodRepository
+    ): RacunProizvodiUseCases {
+        return RacunProizvodiUseCases(
+            getRacun = GetRacun(racunRepository)
         )
     }
 

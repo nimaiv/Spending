@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -47,33 +48,50 @@ fun ProizvodViewScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            Button(
+                onClick = { viewModel.onEvent(ProizvodViewEvent.ToggleEdit) },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(16.dp)
+            ) {
+                Text(text = state.value.buttonText)
+            }
             OutlinedTextField(
                 value = state.value.nazivProizvoda,
                 label = { Text(text = "Naziv proizvoda") },
                 onValueChange = {
-
+                    viewModel.onEvent(ProizvodViewEvent.EnteredNazivProizvoda(it))
                 },
-                enabled = state.value.isEditEnabled
+                enabled = state.value.isEditEnabled,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             OutlinedTextField(
                 value = state.value.skraceniNazivProizvoda,
                 label = { Text(text = "Skraćeni naziv proizvoda") },
                 onValueChange = {
-
+                    viewModel.onEvent(ProizvodViewEvent.EnteredSkraceniNazivProizvoda(it))
                 },
-                enabled = state.value.isEditEnabled
+                enabled = state.value.isEditEnabled,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             OutlinedTextField(
                 value = state.value.barkod?: "",
                 label = { Text(text = "Barkod proizvoda") },
                 onValueChange = {
-
+                    viewModel.onEvent(ProizvodViewEvent.EnteredBarkod(it))
                 },
-                enabled = state.value.isEditEnabled
+                enabled = state.value.isEditEnabled,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(2.dp))
             OutlinedTextField(
                 value = state.value.nazivTipaProizvoda,
                 label = { Text(text = "Tip proizvoda") },
@@ -82,6 +100,7 @@ fun ProizvodViewScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
                     .onGloballyPositioned { coordinates ->
                         tipoviTextFieldSize = coordinates.size.toSize()
                     },
@@ -94,7 +113,7 @@ fun ProizvodViewScreen(
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.width(with(LocalDensity.current){tipoviTextFieldSize.width.toDp()})
+                modifier = Modifier.width(with(LocalDensity.current){tipoviTextFieldSize.width.toDp()}).padding(16.dp)
             ) {
                 state.value.tipoviProizvoda.forEach {  tipProizvoda ->
                     DropdownMenuItem(
@@ -107,14 +126,24 @@ fun ProizvodViewScreen(
                     }
                 }
             }
-            Divider()
+            Divider(thickness = 1.dp)
             Text(text = "Kupnje:", style = MaterialTheme.typography.h6)
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(state.value.kupnje) { kupnja ->
                     Row {
-                        Text(text = "Cijena: ${kupnja.kupnja.cijena}kn")
-                        Text(text = "Datum: ${kupnja.datum}")
+                        Text(
+                            text = "Cijena: ${kupnja.kupnja.cijena}kn",
+                            modifier = Modifier.padding(8.dp)
+                        )
+                        Text(
+                            text = "Datum: ${kupnja.datum}",
+                            modifier = Modifier.padding(8.dp)
+                        )
                     }
+                    Divider(
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(4.dp)
+                    )
 
                 }
             }

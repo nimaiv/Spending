@@ -13,5 +13,6 @@ data class ProizvodViewState(
     val uriSlikeProizvoda: String? = null,
     val kupnje: List<KupnjaDatum> = emptyList(),
     val isEditEnabled: Boolean = false,
-    val tipoviProizvoda: List<TipProizvoda> = emptyList()
+    val tipoviProizvoda: List<TipProizvoda> = emptyList(),
+    val buttonText: String = "Uredi"
 )

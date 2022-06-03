@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hr.nimai.spending.domain.model.InvalidRacunException
 import hr.nimai.spending.domain.model.Racun
@@ -70,6 +71,8 @@ class AddRacunViewModel @Inject constructor(
 
 
 
+
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -91,7 +94,7 @@ class AddRacunViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            Log.d("ENTER_EXTRACT", "ulaz u extraxt")
+            Log.d("ENTER_EXTRACT", "ulaz u extract")
             _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
         }
     }
@@ -125,7 +128,8 @@ class AddRacunViewModel @Inject constructor(
                     nazivProizvoda = event.proizvod.naziv_proizvoda,
                     skraceniNazivProizvoda = event.proizvod.skraceni_naziv_proizvoda,
                     cijenaProizvoda = event.proizvod.cijena.toString(),
-                    kolicinaProizvoda = event.proizvod.kolicina.toString()
+                    kolicinaProizvoda = event.proizvod.kolicina.toString(),
+                    isNew = false
                 )
             }
             is AddRacunEvent.DismissDialog -> {
@@ -186,7 +190,11 @@ class AddRacunViewModel @Inject constructor(
                         cijena = dialogState.value.cijenaProizvoda.toDouble(),
                         kolicina = dialogState.value.kolicinaProizvoda.toInt()
                     )
-                    proizvodi[dialogState.value.id!!] = proizvod
+                    if (dialogState.value.isNew) {
+                        proizvodi.add(proizvod)
+                    } else {
+                        proizvodi[dialogState.value.id!!] = proizvod
+                    }
                     _proizvodiState.value = proizvodi
                     _dialogState.value = dialogState.value.copy(
                         isDialogOpen = false
@@ -203,7 +211,7 @@ class AddRacunViewModel @Inject constructor(
                                 id_trgovine = idTrgovine.value.text.toIntOrNull(),
                                 ukupan_iznos_racuna = ukupanIznos.value.text.toDouble(),
                                 datum_racuna = datumRacuna.value.text,
-                                ocr_tekst = ocrTekst.value.text
+                                ocr_tekst = ocrTekst.value.text,
                             )
                         )
                         addRacunUseCases.insertProizvodiKupnja(
@@ -219,6 +227,37 @@ class AddRacunViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+            is AddRacunEvent.AddNewProizvodDialog -> {
+                _dialogState.value = dialogState.value.copy(
+                    isDialogOpen = true,
+                    id = 0,
+                    nazivProizvoda = "",
+                    skraceniNazivProizvoda = "",
+                    cijenaProizvoda = "0.00",
+                    kolicinaProizvoda = "1",
+                    isNew = true,
+                )
+            }
+            is AddRacunEvent.AddExistingProizvod -> {
+                viewModelScope.launch {
+                    val proizvod = addRacunUseCases.getProizvod(event.idProizvoda)
+                    val proizvodi  = proizvodiState.value.toMutableList()
+                    proizvodi.add(ProizvodKupnjaHolder(
+                        naziv_proizvoda = proizvod.naziv_proizvoda,
+                        skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
+                        id_proizvoda = proizvod.id_proizvoda,
+                        kolicina = 1,
+                        cijena = 0.00
+                    ))
+                    _proizvodiState.value = proizvodi
+                }
+
+            }
+            is AddRacunEvent.DeleteProizvod -> {
+                val proizvodi = proizvodiState.value.toMutableList()
+                proizvodi.removeAt(event.index)
+                _proizvodiState.value = proizvodi
             }
         }
     }
