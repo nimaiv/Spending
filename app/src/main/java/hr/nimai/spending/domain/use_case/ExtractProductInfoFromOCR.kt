@@ -2,13 +2,13 @@ package hr.nimai.spending.domain.use_case
 
 import android.util.Log
 import hr.nimai.spending.domain.repository.ProizvodRepository
-import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
+import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 
 class ExtractProductInfoFromOCR(
     val repository: ProizvodRepository
 ) {
 
-    suspend operator fun invoke(ocrTekst: String): List<ProizvodKupnjaHolder> {
+    suspend operator fun invoke(ocrTekst: String): List<KupnjaProizvodaHolder> {
 
         val imeProizvodaRegex =
             Regex("""^(.+)\n(\d+)\s*[x*]+""", setOf(RegexOption.MULTILINE, RegexOption.IGNORE_CASE))
@@ -21,14 +21,14 @@ class ExtractProductInfoFromOCR(
         val cijene = cijeneProizvodaRegex.findAll(ocrTekst).toList()
 
         try {
-            val proizvodi = mutableListOf<ProizvodKupnjaHolder>()
+            val proizvodi = mutableListOf<KupnjaProizvodaHolder>()
             for (i in 1 until imena.size) {
                 val nazivProizvoda = imena[i].groupValues[1]
                 val kolicinaProizvoda = imena[i].groupValues[2].toInt()
-                var proizvod: ProizvodKupnjaHolder? = GetFuzzyMatchProizvodKupnja(repository).invoke(nazivProizvoda)
+                var proizvod: KupnjaProizvodaHolder? = GetFuzzyMatchProizvodKupnja(repository).invoke(nazivProizvoda)
                 proizvod = if (proizvod != null) {
                     Log.d("EXTRACT", "NOT NULL")
-                    ProizvodKupnjaHolder(
+                    KupnjaProizvodaHolder(
                         naziv_proizvoda = proizvod.naziv_proizvoda,
                         skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
                         kolicina = kolicinaProizvoda,
@@ -36,7 +36,7 @@ class ExtractProductInfoFromOCR(
                     )
                 } else {
                     Log.d("EXTRACT", "NULL")
-                    ProizvodKupnjaHolder(
+                    KupnjaProizvodaHolder(
                         naziv_proizvoda = nazivProizvoda,
                         skraceni_naziv_proizvoda = nazivProizvoda,
                         kolicina = kolicinaProizvoda

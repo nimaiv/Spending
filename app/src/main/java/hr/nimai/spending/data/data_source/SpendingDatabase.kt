@@ -10,8 +10,7 @@ import hr.nimai.spending.domain.model.*
                 Proizvod::class,
                 Kupnja::class,
                 Trgovina::class,
-                TipProizvoda::class,
-                Fransiza::class],
+                TipProizvoda::class],
     version = 1
 )
 abstract class SpendingDatabase : RoomDatabase() {
@@ -20,7 +19,6 @@ abstract class SpendingDatabase : RoomDatabase() {
     abstract fun proizvodDao(): ProizvodDao
     abstract fun trgovinaDao(): TrgovinaDao
     abstract fun tipProizvodaDao(): TipProizvodaDao
-    abstract fun fransizaDao(): FransizaDao
 
     companion object {
         const val DATABASE_NAME = "spending_db"

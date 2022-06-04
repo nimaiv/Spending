@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.Receipt
+import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -18,11 +19,8 @@ import com.ramcosta.composedestinations.navigation.popBackStack
 import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 import hr.nimai.spending.R
-import hr.nimai.spending.presentation.destinations.DirectionDestination
-import hr.nimai.spending.presentation.destinations.RacuniScreenDestination
 import hr.nimai.spending.presentation.NavGraphs
-import hr.nimai.spending.presentation.destinations.ProizvodiScreenDestination
-import hr.nimai.spending.presentation.destinations.RacunScanScreenDestination
+import hr.nimai.spending.presentation.destinations.*
 
 @Composable
 fun BottomBar(
@@ -70,5 +68,6 @@ enum class BottomBarItem(
 ) {
     Racuni(RacuniScreenDestination, Icons.Default.Receipt, R.string.racuni_screen),
     Skeniraj(RacunScanScreenDestination, Icons.Default.DocumentScanner, R.string.scan_screen),
-    Proizvodi(ProizvodiScreenDestination, Icons.Default.ShoppingBasket, R.string.proizvodi_screen)
+    Proizvodi(ProizvodiScreenDestination, Icons.Default.ShoppingBasket, R.string.proizvodi_screen),
+    Trgovine(TrgovineScreenDestination, Icons.Default.Shop, R.string.trgovine_screen)
 }

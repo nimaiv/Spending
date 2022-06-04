@@ -82,10 +82,10 @@ fun EditProizvodDialog(
         buttons = {
             Row(
                 modifier = Modifier.padding(8.dp),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.End
             ) {
                 Button(
-                    modifier = Modifier,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     onClick = {
                         viewModel.onEvent(AddRacunEvent.DismissDialog)
                     }
@@ -93,7 +93,7 @@ fun EditProizvodDialog(
                     Text("Odustani")
                 }
                 Button(
-                    modifier = Modifier,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     onClick = {
                         viewModel.onEvent(AddRacunEvent.EditProizvodValues)
                     }

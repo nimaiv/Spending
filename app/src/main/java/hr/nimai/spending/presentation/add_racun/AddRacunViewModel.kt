@@ -6,12 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hr.nimai.spending.domain.model.InvalidRacunException
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.use_case.AddRacunUseCases
-import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
+import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -58,8 +57,8 @@ class AddRacunViewModel @Inject constructor(
     )
     val ocrTekst: State<RacunTextFieldState> = _ocrTekst
 
-    private val _proizvodiState = mutableStateOf<List<ProizvodKupnjaHolder>>(emptyList())
-    val proizvodiState: State<List<ProizvodKupnjaHolder>> = _proizvodiState
+    private val _proizvodiState = mutableStateOf<List<KupnjaProizvodaHolder>>(emptyList())
+    val proizvodiState: State<List<KupnjaProizvodaHolder>> = _proizvodiState
 
     private val _dialogState = mutableStateOf(
         DialogState(
@@ -184,7 +183,7 @@ class AddRacunViewModel @Inject constructor(
                     )
                 } else {
                     val proizvodi = proizvodiState.value.toMutableList()
-                    val proizvod = ProizvodKupnjaHolder(
+                    val proizvod = KupnjaProizvodaHolder(
                         naziv_proizvoda = dialogState.value.nazivProizvoda,
                         skraceni_naziv_proizvoda = dialogState.value.skraceniNazivProizvoda,
                         cijena = dialogState.value.cijenaProizvoda.toDouble(),
@@ -243,7 +242,7 @@ class AddRacunViewModel @Inject constructor(
                 viewModelScope.launch {
                     val proizvod = addRacunUseCases.getProizvod(event.idProizvoda)
                     val proizvodi  = proizvodiState.value.toMutableList()
-                    proizvodi.add(ProizvodKupnjaHolder(
+                    proizvodi.add(KupnjaProizvodaHolder(
                         naziv_proizvoda = proizvod.naziv_proizvoda,
                         skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
                         id_proizvoda = proizvod.id_proizvoda,

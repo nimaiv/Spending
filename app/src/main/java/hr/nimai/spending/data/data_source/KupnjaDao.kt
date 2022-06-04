@@ -15,6 +15,9 @@ interface KupnjaDao {
     @Query("SELECT * FROM kupnja WHERE id_proizvoda = :id_proizvoda")
     suspend fun getKupnjeByIdProizvoda(id_proizvoda: Int): List<Kupnja>
 
+    @Query("SELECT * FROM kupnja WHERE id_proizvoda = :id_racuna")
+    suspend fun getKupnjeByIdRacuna(id_racuna: Int): List<Kupnja>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertKupnja(kupnja: Kupnja)
 

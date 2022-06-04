@@ -1,5 +1,6 @@
 package hr.nimai.spending.domain.use_case
 
 data class RacunProizvodiUseCases(
-    val getRacun: GetRacun
+    val getRacun: GetRacun,
+    val getKupnjeProizvodaRacuna: GetKupnjeProizvodaRacuna,
 )

@@ -1,6 +1,6 @@
 package hr.nimai.spending.presentation.add_racun
 
-import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
+import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 
 sealed class AddRacunEvent {
     data class EnteredBrojRacuna(val value: String) : AddRacunEvent()
@@ -11,7 +11,7 @@ sealed class AddRacunEvent {
     data class EnteredSkraceniNazivProizvoda(val value: String) : AddRacunEvent()
     data class EnteredCijenaProizvoda(val value: String) : AddRacunEvent()
     data class EnteredKolicinaProizvoda(val value: String) : AddRacunEvent()
-    data class OpenDialog(val proizvod: ProizvodKupnjaHolder, val id: Int): AddRacunEvent()
+    data class OpenDialog(val proizvod: KupnjaProizvodaHolder, val id: Int): AddRacunEvent()
     data class AddExistingProizvod(val idProizvoda: Int): AddRacunEvent()
     data class DeleteProizvod(val index: Int): AddRacunEvent()
     object EditProizvodValues: AddRacunEvent()

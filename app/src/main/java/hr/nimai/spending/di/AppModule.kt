@@ -59,12 +59,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFransizaRepository(db: SpendingDatabase): FransizaRepository {
-        return FransizaRepositoryImpl(db.fransizaDao())
-    }
-
-    @Provides
-    @Singleton
     fun provideRacunUseCases(repository: RacunRepository): RacunUseCases {
         return RacunUseCases(
             getRacuni = GetRacuni(repository),
@@ -127,10 +121,23 @@ object AppModule {
     @Singleton
     fun provideRacunProizvodiUseCases(
         racunRepository: RacunRepository,
-        proizvodRepository: ProizvodRepository
+        proizvodRepository: ProizvodRepository,
+        kupnjaRepository: KupnjaRepository
     ): RacunProizvodiUseCases {
         return RacunProizvodiUseCases(
-            getRacun = GetRacun(racunRepository)
+            getRacun = GetRacun(racunRepository),
+            getKupnjeProizvodaRacuna = GetKupnjeProizvodaRacuna(proizvodRepository, kupnjaRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTrgovineUseCases(
+        trgovinaRepository: TrgovinaRepository,
+    ): TrgovineUseCases {
+        return TrgovineUseCases(
+            getTrgovine = GetTrgovine(trgovinaRepository),
+            insertTrgovina = InsertTrgovina(trgovinaRepository)
         )
     }
 

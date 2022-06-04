@@ -4,14 +4,14 @@ import hr.nimai.spending.domain.model.Kupnja
 import hr.nimai.spending.domain.model.Proizvod
 import hr.nimai.spending.domain.repository.KupnjaRepository
 import hr.nimai.spending.domain.repository.ProizvodRepository
-import hr.nimai.spending.domain.util.ProizvodKupnjaHolder
+import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 
 class InsertProizvodiKupnja(
     private val proizvodRepository: ProizvodRepository,
     private val kupnjaRepository: KupnjaRepository
 ) {
 
-    suspend operator fun invoke(proizvodi: List<ProizvodKupnjaHolder>, idRacuna: Int) {
+    suspend operator fun invoke(proizvodi: List<KupnjaProizvodaHolder>, idRacuna: Int) {
 
         for (proizvod in proizvodi) {
             val id = proizvodRepository.insertProizvod(Proizvod(
