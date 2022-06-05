@@ -10,7 +10,8 @@ import hr.nimai.spending.domain.util.takePicture
 @ExperimentalGetImage
 fun CameraView(
     onImageCaptured: (ImageProxy, Boolean) -> Unit,
-    onError: (ImageCaptureException) -> Unit
+    onError: (ImageCaptureException) -> Unit,
+    onExitClick: () -> Unit,
 ) {
     val imageCapture: ImageCapture = remember {
         ImageCapture.Builder().build()
@@ -35,7 +36,7 @@ fun CameraView(
 
             }
             is CameraUIAction.OnExitClick -> {
-
+                onExitClick()
             }
         }
     }

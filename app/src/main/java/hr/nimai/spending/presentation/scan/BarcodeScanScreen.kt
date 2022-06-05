@@ -1,39 +1,41 @@
 package hr.nimai.spending.presentation.scan
 
+import android.Manifest
 import androidx.camera.core.ExperimentalGetImage
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import hr.nimai.spending.presentation.destinations.AddRacunScreenDestination
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import hr.nimai.spending.presentation.scan.components.CameraView
 import kotlinx.coroutines.flow.collectLatest
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 @Destination
 @ExperimentalGetImage
-fun RacunScanScreen(
-    navigator: DestinationsNavigator,
-    viewModel: RacunScanViewModel = hiltViewModel()
+fun BarcodeScanScreen(
+    resultBackNavigator: ResultBackNavigator<String>,
+    viewModel: BarcodeScanViewModel = hiltViewModel()
 ) {
 
     val cameraPermissionState = rememberPermissionState(
-        permission = android.Manifest.permission.CAMERA
+        permission = Manifest.permission.CAMERA
     )
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
-                is RacunScanViewModel.UiEvent.ScanComplete -> {
-                    navigator.navigate(AddRacunScreenDestination(event.ocrText))
+                is BarcodeScanViewModel.UiEvent.ScanComplete -> {
+                    resultBackNavigator.navigateBack(event.barcode)
                 }
             }
         }
@@ -47,24 +49,23 @@ fun RacunScanScreen(
                 },
                 onError = { },
                 onExitClick = {
-                    navigator.navigateUp()
+                    resultBackNavigator.navigateBack()
                 }
             )
         }
         is PermissionStatus.Denied -> {
             Column {
                 val textToShow = if (cameraPermissionState.status.shouldShowRationale) {
-                    "Potrebno je dopuštenje za korištenje kamere. Molim dodajte ga."
+                    "The camera is important for this app. Please grant the permission."
                 } else {
-                    "Potrebno je dopuštenje za korištenje kamere kako bi ova mogućnost radila." +
-                            "Molim dodajte ga."
+                    "Camera permission required for this feature to be available. " +
+                            "Please grant the permission"
                 }
                 Text(textToShow)
                 Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                    Text("Dodaj dopuštenje")
+                    Text("Request permission")
                 }
             }
         }
     }
-
 }

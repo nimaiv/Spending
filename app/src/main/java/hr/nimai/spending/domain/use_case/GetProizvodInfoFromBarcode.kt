@@ -2,7 +2,7 @@ package hr.nimai.spending.domain.use_case
 
 import android.util.Log
 import hr.nimai.spending.domain.util.GetProizvodFromBarcodeService
-import hr.nimai.spending.domain.util.ProizvodJSON
+import hr.nimai.spending.domain.util.ProductsJSON
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class GetProizvodInfoFromBarcode {
 
-    operator fun invoke(barcode: String) {
+    operator fun invoke(barcode: String, onResponseSuccess: (ProductsJSON?) -> Unit) {
         val retro = Retrofit.Builder()
             .baseUrl(URL_BARCODE_API)
             .addConverterFactory(GsonConverterFactory.create())
@@ -21,19 +21,22 @@ class GetProizvodInfoFromBarcode {
 
         val proizvodRequest = service.listProizvodi(API_KEY, barcode)
 
-        proizvodRequest.enqueue(object : Callback<List<ProizvodJSON>> {
-            override fun onResponse(
-                call: Call<List<ProizvodJSON>>,
-                response: Response<List<ProizvodJSON>>
-            ) {
 
+        proizvodRequest.enqueue(object : Callback<ProductsJSON> {
+            override fun onResponse(
+                call: Call<ProductsJSON>,
+                response: Response<ProductsJSON>
+            ) {
+                val proizvodi = response.body()
+                onResponseSuccess(proizvodi)
             }
 
-            override fun onFailure(call: Call<List<ProizvodJSON>>, t: Throwable) {
-                Log.e("GetProizvodInfoFromBarcode", "Failed request!")
+            override fun onFailure(call: Call<ProductsJSON>, t: Throwable) {
+                Log.e("GetProizvodInfoFromBarcode", "Failed request!: ${t.message}")
             }
 
         })
+
     }
 
     companion object {

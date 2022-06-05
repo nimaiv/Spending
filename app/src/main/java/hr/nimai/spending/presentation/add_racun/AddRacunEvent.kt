@@ -14,6 +14,8 @@ sealed class AddRacunEvent {
     data class OpenDialog(val proizvod: KupnjaProizvodaHolder, val id: Int): AddRacunEvent()
     data class AddExistingProizvod(val idProizvoda: Int): AddRacunEvent()
     data class DeleteProizvod(val index: Int): AddRacunEvent()
+    data class GetDataWithBarcode(val barcode: String): AddRacunEvent()
+    object ScanBarcode: AddRacunEvent()
     object EditProizvodValues: AddRacunEvent()
     object AddNewProizvodDialog: AddRacunEvent()
     object DismissDialog: AddRacunEvent()

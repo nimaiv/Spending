@@ -29,6 +29,11 @@ fun EditProizvodDialog(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
+                Button(
+                    onClick = { viewModel.onEvent(AddRacunEvent.ScanBarcode) }
+                ) {
+                    Text(text = "Skeniraj")
+                }
                 RacunTextField(
                     text = dialogState.nazivProizvoda,
                     label = "Naziv proizvoda",
@@ -36,6 +41,7 @@ fun EditProizvodDialog(
                         viewModel.onEvent(AddRacunEvent.EnteredNazivProizvoda(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
+                    isError = dialogState.isNazivEmptyError,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 RacunTextField(
@@ -45,6 +51,17 @@ fun EditProizvodDialog(
                         viewModel.onEvent(AddRacunEvent.EnteredSkraceniNazivProizvoda(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
+                    isError = dialogState.isSkraceniNazivEmptyError
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                RacunTextField(
+                    text = dialogState.barkod,
+                    label = "Barkod",
+                    onValueChange = {
+
+                    },
+                    textStyle = MaterialTheme.typography.body1,
+                    isEnabled = false,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 RacunTextField(

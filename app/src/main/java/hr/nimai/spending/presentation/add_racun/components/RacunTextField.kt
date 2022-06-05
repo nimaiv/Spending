@@ -17,7 +17,8 @@ fun RacunTextField(
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
     maxLines: Int = 10,
-    isError: Boolean = false
+    isError: Boolean = false,
+    isEnabled: Boolean = true,
 ) {
     Box(
         modifier = modifier
@@ -34,7 +35,8 @@ fun RacunTextField(
             modifier = Modifier
                 .fillMaxWidth(),
             maxLines = maxLines,
-            isError = isError
+            isError = isError,
+            enabled = isEnabled,
         )
     }
 }

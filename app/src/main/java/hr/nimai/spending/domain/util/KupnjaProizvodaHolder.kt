@@ -6,4 +6,6 @@ data class KupnjaProizvodaHolder(
     val kolicina: Int = 1,
     var cijena: Double = 0.00,
     val id_proizvoda: Int = 0,
+    val barkod: String? = "",
+    val uriSlike: String? = "",
 )

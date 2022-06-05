@@ -1,6 +1,7 @@
 package hr.nimai.spending.presentation.add_racun
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -22,17 +24,19 @@ import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import hr.nimai.spending.presentation.add_racun.components.EditProizvodDialog
 import hr.nimai.spending.presentation.add_racun.components.ProizvodItem
+import hr.nimai.spending.presentation.destinations.BarcodeScanScreenDestination
 import hr.nimai.spending.presentation.destinations.RacuniScreenDestination
 import hr.nimai.spending.presentation.destinations.SelectProizvodScreenDestination
 import kotlinx.coroutines.flow.collectLatest
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "ShowToast")
 @Composable
 @Destination
 fun AddRacunScreen(
     ocrText: String,
     navigator: DestinationsNavigator,
-    resultRecipient: ResultRecipient<SelectProizvodScreenDestination, Int>,
+    resultRecipientProizvod: ResultRecipient<SelectProizvodScreenDestination, Int>,
+    resultRecipientBarcode: ResultRecipient<BarcodeScanScreenDestination, String>,
     viewModel: AddRacunViewModel = hiltViewModel()
 ) {
     val brojRacunaState = viewModel.brojRacuna.value
@@ -45,6 +49,8 @@ fun AddRacunScreen(
 
     val scaffoldState = rememberScaffoldState()
 
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -53,22 +59,39 @@ fun AddRacunScreen(
                     navigator.popBackStack()
                     navigator.navigate(RacuniScreenDestination)
                 }
+                is AddRacunViewModel.UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
                 is AddRacunViewModel.UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
+                is AddRacunViewModel.UiEvent.ScanBarcode -> {
+                    navigator.navigate(BarcodeScanScreenDestination)
+                }
             }
         }
     }
-    
-    resultRecipient.onNavResult { result ->
+
+    resultRecipientProizvod.onNavResult { result ->
         when (result) {
             is NavResult.Canceled -> {
 
             }
             is NavResult.Value -> {
                 viewModel.onEvent(AddRacunEvent.AddExistingProizvod(result.value))
+            }
+        }
+    }
+
+    resultRecipientBarcode.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> {
+
+            }
+            is NavResult.Value -> {
+                viewModel.onEvent(AddRacunEvent.GetDataWithBarcode(result.value))
             }
         }
     }

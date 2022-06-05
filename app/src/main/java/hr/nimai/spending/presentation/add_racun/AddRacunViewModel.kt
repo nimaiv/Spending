@@ -128,7 +128,9 @@ class AddRacunViewModel @Inject constructor(
                     skraceniNazivProizvoda = event.proizvod.skraceni_naziv_proizvoda,
                     cijenaProizvoda = event.proizvod.cijena.toString(),
                     kolicinaProizvoda = event.proizvod.kolicina.toString(),
-                    isNew = false
+                    isNew = false,
+                    barkod = event.proizvod.barkod?: "",
+                    uriSlike = event.proizvod.uriSlike?: ""
                 )
             }
             is AddRacunEvent.DismissDialog -> {
@@ -142,8 +144,7 @@ class AddRacunViewModel @Inject constructor(
                         cijenaProizvoda = event.value,
                         isCijenaError = true
                     )
-                }
-                else {
+                } else {
                     _dialogState.value = dialogState.value.copy(
                         cijenaProizvoda = event.value,
                         isCijenaError = false,
@@ -157,8 +158,7 @@ class AddRacunViewModel @Inject constructor(
                         kolicinaProizvoda = event.value,
                         isKolicinaError = true,
                     )
-                }
-                else {
+                } else {
                     _dialogState.value = dialogState.value.copy(
                         kolicinaProizvoda = event.value,
                         isKolicinaError = false,
@@ -167,17 +167,37 @@ class AddRacunViewModel @Inject constructor(
                 }
             }
             is AddRacunEvent.EnteredNazivProizvoda -> {
-                _dialogState.value = dialogState.value.copy(
-                    nazivProizvoda = event.value
-                )
+                if (event.value.isBlank()) {
+                    _dialogState.value = dialogState.value.copy(
+                        nazivProizvoda = event.value,
+                        isNazivEmptyError = true
+                    )
+                } else {
+                    _dialogState.value = dialogState.value.copy(
+                        nazivProizvoda = event.value,
+                        isNazivEmptyError = false
+                    )
+                }
             }
             is AddRacunEvent.EnteredSkraceniNazivProizvoda -> {
-                _dialogState.value = dialogState.value.copy(
-                    skraceniNazivProizvoda = event.value
-                )
+                if (event.value.isBlank()) {
+                    _dialogState.value = dialogState.value.copy(
+                        skraceniNazivProizvoda = event.value,
+                        isSkraceniNazivEmptyError = true
+                    )
+                } else {
+                    _dialogState.value = dialogState.value.copy(
+                        skraceniNazivProizvoda = event.value,
+                        isSkraceniNazivEmptyError = false
+                    )
+                }
             }
             is AddRacunEvent.EditProizvodValues -> {
-                if (dialogState.value.isCijenaError || dialogState.value.isKolicinaError) {
+                if (dialogState.value.isCijenaError ||
+                    dialogState.value.isKolicinaError ||
+                    dialogState.value.isNazivEmptyError ||
+                    dialogState.value.isSkraceniNazivEmptyError) {
+
                     _dialogState.value = dialogState.value.copy(
                         showErrorMessage = true
                     )
@@ -187,7 +207,9 @@ class AddRacunViewModel @Inject constructor(
                         naziv_proizvoda = dialogState.value.nazivProizvoda,
                         skraceni_naziv_proizvoda = dialogState.value.skraceniNazivProizvoda,
                         cijena = dialogState.value.cijenaProizvoda.toDouble(),
-                        kolicina = dialogState.value.kolicinaProizvoda.toInt()
+                        kolicina = dialogState.value.kolicinaProizvoda.toInt(),
+                        barkod = dialogState.value.barkod,
+                        uriSlike = dialogState.value.uriSlike
                     )
                     if (dialogState.value.isNew) {
                         proizvodi.add(proizvod)
@@ -236,6 +258,10 @@ class AddRacunViewModel @Inject constructor(
                     cijenaProizvoda = "0.00",
                     kolicinaProizvoda = "1",
                     isNew = true,
+                    barkod = "",
+                    uriSlike = "",
+                    isSkraceniNazivEmptyError = true,
+                    isNazivEmptyError = true,
                 )
             }
             is AddRacunEvent.AddExistingProizvod -> {
@@ -247,7 +273,9 @@ class AddRacunViewModel @Inject constructor(
                         skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
                         id_proizvoda = proizvod.id_proizvoda,
                         kolicina = 1,
-                        cijena = 0.00
+                        cijena = 0.00,
+                        barkod = proizvod.barkod,
+                        uriSlike = proizvod.uri_slike
                     ))
                     _proizvodiState.value = proizvodi
                 }
@@ -258,12 +286,38 @@ class AddRacunViewModel @Inject constructor(
                 proizvodi.removeAt(event.index)
                 _proizvodiState.value = proizvodi
             }
+            is AddRacunEvent.ScanBarcode -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ScanBarcode)
+                }
+            }
+            is AddRacunEvent.GetDataWithBarcode -> {
+                addRacunUseCases.getProizvodInfoFromBarcode(event.barcode) { proizvodi ->
+                    if (proizvodi != null) {
+                        val proizvod = proizvodi.products[0]
+                        _dialogState.value = dialogState.value.copy(
+                            barkod = event.barcode,
+                            nazivProizvoda = proizvod.title
+                        )
+
+                    } else {
+                        _dialogState.value = dialogState.value.copy(
+                            barkod = event.barcode,
+                        )
+                        viewModelScope.launch {
+                            _eventFlow.emit(UiEvent.ShowToast("Nije pronađen proizvod s barkodom"))
+                        }
+                    }
+                }
+            }
         }
     }
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String) : UiEvent()
+        data class ShowToast(val message: String): UiEvent()
         object SaveRacun : UiEvent()
+        object ScanBarcode: UiEvent()
     }
 
 }

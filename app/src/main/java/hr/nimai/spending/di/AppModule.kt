@@ -87,7 +87,8 @@ object AppModule {
             readOCRToRacun = ReadOCRToRacun(),
             extractProductInfoFromOCR = ExtractProductInfoFromOCR(proizvodRepository),
             insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository),
-            getProizvod = GetProizvod(proizvodRepository)
+            getProizvod = GetProizvod(proizvodRepository),
+            getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode()
         )
     }
 
@@ -141,4 +142,12 @@ object AppModule {
         )
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
+    @Provides
+    @Singleton
+    fun provideBarcodeScanUseCases(): BarcodeScanUseCases {
+        return BarcodeScanUseCases(
+            parseBarcode = ParseBarcode()
+        )
+    }
 }

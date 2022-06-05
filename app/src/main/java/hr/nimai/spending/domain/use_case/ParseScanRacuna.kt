@@ -1,7 +1,5 @@
 package hr.nimai.spending.domain.use_case
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
@@ -17,7 +15,6 @@ class ParseScanRacuna {
         inputImage?.let {
             recognizer.process(it).addOnSuccessListener { visionText ->
                 val ocrText = visionText.text
-                Log.d(TAG, ocrText)
                 onRecognitionComplete(ocrText)
             }
         }
