@@ -88,7 +88,8 @@ object AppModule {
             extractProductInfoFromOCR = ExtractProductInfoFromOCR(proizvodRepository),
             insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository),
             getProizvod = GetProizvod(proizvodRepository),
-            getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode()
+            getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
+            downdloadImage = DownloadImage()
         )
     }
 
@@ -114,7 +115,8 @@ object AppModule {
             getProizvod = GetProizvod(proizvodRepository),
             getKupnjeProizvoda = GetKupnjeProizvoda(kupnjaRepository, racunRepository),
             getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository),
-            insertProizvod = InsertProizvod(proizvodRepository)
+            insertProizvod = InsertProizvod(proizvodRepository),
+            deleteProizvod = DeleteProizvod(proizvodRepository)
         )
     }
 

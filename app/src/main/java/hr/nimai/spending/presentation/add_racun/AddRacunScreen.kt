@@ -100,7 +100,7 @@ fun AddRacunScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(AddRacunEvent.SaveRacun)
+                    viewModel.onEvent(AddRacunEvent.SaveRacun(context))
                 },
                 backgroundColor = MaterialTheme.colors.primary,
             ) {

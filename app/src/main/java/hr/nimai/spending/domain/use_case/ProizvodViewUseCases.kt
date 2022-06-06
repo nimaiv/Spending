@@ -5,4 +5,5 @@ data class ProizvodViewUseCases(
     val getKupnjeProizvoda: GetKupnjeProizvoda,
     val getTipoviProizvoda: GetTipoviProizvoda,
     val insertProizvod: InsertProizvod,
+    val deleteProizvod: DeleteProizvod
 )

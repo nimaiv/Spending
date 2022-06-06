@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hr.nimai.spending.domain.model.Proizvod
 import hr.nimai.spending.domain.use_case.ProizvodViewUseCases
+import hr.nimai.spending.presentation.add_racun.AddRacunViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +22,9 @@ class ProizvodViewViewModel @Inject constructor(
 
     private val _state = mutableStateOf(ProizvodViewState())
     val state: State<ProizvodViewState> = _state
+
+    private val _eventFlow = MutableSharedFlow<ProizvodViewViewModel.UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         val idProizvoda: Int = savedStateHandle.get<Int>("idProizvoda")!!
@@ -99,6 +105,29 @@ class ProizvodViewViewModel @Inject constructor(
                     skraceniNazivProizvoda = event.value
                 )
             }
+            is ProizvodViewEvent.DeleteProizvod -> {
+                viewModelScope.launch {
+                    proizvodViewUseCases.deleteProizvod(Proizvod(
+                        id_proizvoda = state.value.idProizvoda,
+                        naziv_proizvoda = state.value.nazivProizvoda,
+                        skraceni_naziv_proizvoda = state.value.skraceniNazivProizvoda,
+                        tip_proizvoda = state.value.idTipaProizvoda,
+                        barkod = state.value.barkod,
+                        uri_slike = state.value.uriSlikeProizvoda
+                    ))
+                    _eventFlow.emit(UiEvent.DeletedProizvod)
+                }
+            }
+            is ProizvodViewEvent.SelectTipProizvoda -> {
+                _state.value = state.value.copy(
+                    idTipaProizvoda = event.value.id_tipa_proizvoda,
+                    nazivProizvoda = event.value.naziv_tipa_proizvoda
+                )
+            }
         }
+    }
+
+    sealed class UiEvent {
+        object DeletedProizvod: UiEvent()
     }
 }

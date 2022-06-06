@@ -18,6 +18,8 @@ class InsertProizvodiKupnja(
                 id_proizvoda = proizvod.id_proizvoda,
                 naziv_proizvoda = proizvod.naziv_proizvoda,
                 skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
+                uri_slike = proizvod.uriSlike,
+                barkod = proizvod.barkod
             )).toInt()
 
             kupnjaRepository.insertKupnja(Kupnja(

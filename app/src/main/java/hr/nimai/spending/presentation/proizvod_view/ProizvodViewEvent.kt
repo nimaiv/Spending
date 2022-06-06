@@ -7,5 +7,7 @@ sealed class ProizvodViewEvent {
     data class EnteredNazivProizvoda(val value: String): ProizvodViewEvent()
     data class EnteredSkraceniNazivProizvoda(val value: String): ProizvodViewEvent()
     data class EnteredBarkod(val value: String): ProizvodViewEvent()
+    data class SelectTipProizvoda(val value: TipProizvoda): ProizvodViewEvent()
+    object DeleteProizvod: ProizvodViewEvent()
     object ToggleEdit: ProizvodViewEvent()
 }

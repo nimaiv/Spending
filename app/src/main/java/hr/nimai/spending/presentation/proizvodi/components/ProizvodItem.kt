@@ -8,9 +8,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import hr.nimai.spending.R
 import hr.nimai.spending.domain.model.Proizvod
 import java.io.File
@@ -20,6 +24,8 @@ fun ProizvodItem(
     proizvod: Proizvod,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     Card(
         backgroundColor = MaterialTheme.colors.primary,
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -45,9 +51,9 @@ fun ProizvodItem(
                 modifier = Modifier.size(64.dp),
                 elevation = 2.dp
             ) {
-                if (proizvod.uri_slike != null) {
-                    Image(
-                        rememberAsyncImagePainter(model = File(proizvod.uri_slike)),
+                if (!proizvod.uri_slike.isNullOrEmpty()) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context).data(context.openFileInput(proizvod.uri_slike).readBytes()).build(),
                         contentDescription = "Slika",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()

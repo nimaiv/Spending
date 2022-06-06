@@ -1,5 +1,6 @@
 package hr.nimai.spending.presentation.add_racun
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import hr.nimai.spending.domain.model.InvalidRacunException
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.use_case.AddRacunUseCases
@@ -68,13 +70,8 @@ class AddRacunViewModel @Inject constructor(
     )
     val dialogState: State<DialogState> = _dialogState
 
-
-
-
-
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
-
 
     init {
         val ocrText = savedStateHandle.get<String>("ocrText")
@@ -93,7 +90,6 @@ class AddRacunViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            Log.d("ENTER_EXTRACT", "ulaz u extract")
             _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
         }
     }
@@ -209,7 +205,8 @@ class AddRacunViewModel @Inject constructor(
                         cijena = dialogState.value.cijenaProizvoda.toDouble(),
                         kolicina = dialogState.value.kolicinaProizvoda.toInt(),
                         barkod = dialogState.value.barkod,
-                        uriSlike = dialogState.value.uriSlike
+                        uriSlike = dialogState.value.uriSlike,
+                        slika = dialogState.value.slika
                     )
                     if (dialogState.value.isNew) {
                         proizvodi.add(proizvod)
@@ -239,6 +236,15 @@ class AddRacunViewModel @Inject constructor(
                             proizvodi = proizvodiState.value,
                             idRacuna = idRacuna
                         )
+                        proizvodiState.value.forEach { proizvod ->
+                            if (proizvod.slika != null) {
+                                val context = event.context
+                                val fileName = "${proizvod.barkod}.jpg"
+                                context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
+                                    it.write(proizvod.slika)
+                                }
+                            }
+                        }
                         _eventFlow.emit(UiEvent.SaveRacun)
                     } catch (e: InvalidRacunException) {
                         _eventFlow.emit(
@@ -262,6 +268,7 @@ class AddRacunViewModel @Inject constructor(
                     uriSlike = "",
                     isSkraceniNazivEmptyError = true,
                     isNazivEmptyError = true,
+                    slika = null,
                 )
             }
             is AddRacunEvent.AddExistingProizvod -> {
@@ -295,11 +302,14 @@ class AddRacunViewModel @Inject constructor(
                 addRacunUseCases.getProizvodInfoFromBarcode(event.barcode) { proizvodi ->
                     if (proizvodi != null) {
                         val proizvod = proizvodi.products[0]
-                        _dialogState.value = dialogState.value.copy(
-                            barkod = event.barcode,
-                            nazivProizvoda = proizvod.title
-                        )
-
+                        addRacunUseCases.downdloadImage(proizvod.images[0]) { image ->
+                            _dialogState.value = dialogState.value.copy(
+                                barkod = event.barcode,
+                                nazivProizvoda = proizvod.title,
+                                uriSlike = "${event.barcode}.jpg",
+                                slika = image
+                            )
+                        }
                     } else {
                         _dialogState.value = dialogState.value.copy(
                             barkod = event.barcode,

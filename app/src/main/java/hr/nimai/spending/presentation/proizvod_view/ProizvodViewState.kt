@@ -14,5 +14,5 @@ data class ProizvodViewState(
     val kupnje: List<KupnjaDatum> = emptyList(),
     val isEditEnabled: Boolean = false,
     val tipoviProizvoda: List<TipProizvoda> = emptyList(),
-    val buttonText: String = "Uredi"
+    val buttonText: String = "Uredi",
 )

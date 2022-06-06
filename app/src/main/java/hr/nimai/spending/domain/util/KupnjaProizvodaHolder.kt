@@ -8,4 +8,5 @@ data class KupnjaProizvodaHolder(
     val id_proizvoda: Int = 0,
     val barkod: String? = "",
     val uriSlike: String? = "",
+    val slika: ByteArray? = null
 )

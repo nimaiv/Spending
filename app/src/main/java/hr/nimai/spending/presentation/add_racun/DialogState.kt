@@ -14,5 +14,6 @@ data class DialogState(
     val isSkraceniNazivEmptyError: Boolean = false,
     val showErrorMessage: Boolean = false,
     val isNew: Boolean = false,
-    val uriSlike: String = ""
+    val uriSlike: String = "",
+    val slika: ByteArray? = null,
 )

@@ -1,26 +1,24 @@
 package hr.nimai.spending.presentation.proizvod_view
 
-import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import hr.nimai.spending.presentation.racuni.components.RacunItem
+import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Destination
 fun ProizvodViewScreen(
@@ -32,13 +30,21 @@ fun ProizvodViewScreen(
     val state = viewModel.state
 
     var expanded by remember { mutableStateOf(false) }
-    val icon = if (expanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-    var tipoviTextFieldSize by remember { mutableStateOf(Size.Zero) }
 
     val scaffoldState = rememberScaffoldState()
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is ProizvodViewViewModel.UiEvent.DeletedProizvod -> {
+                    Toast.makeText(context, "Proizvod je uspješno obrisan", Toast.LENGTH_SHORT).show()
+                    navigator.navigateUp()
+                }
+            }
+        }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState
@@ -48,13 +54,39 @@ fun ProizvodViewScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            Button(
-                onClick = { viewModel.onEvent(ProizvodViewEvent.ToggleEdit) },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(16.dp)
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.padding(vertical = 8.dp)
             ) {
-                Text(text = state.value.buttonText)
+                IconButton(
+                    onClick = {
+                        navigator.navigateUp()
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Natrag"
+                    )
+                }
+
+                Button(
+                    onClick = { viewModel.onEvent(ProizvodViewEvent.ToggleEdit) },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(text = state.value.buttonText)
+                }
+                if (state.value.isEditEnabled) {
+                    Button(
+                        onClick = { viewModel.onEvent(ProizvodViewEvent.DeleteProizvod) },
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                    ) {
+                        Text(text = "Obriši")
+                    }
+                }
             }
             OutlinedTextField(
                 value = state.value.nazivProizvoda,
@@ -92,37 +124,43 @@ fun ProizvodViewScreen(
                     .padding(horizontal = 8.dp)
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OutlinedTextField(
-                value = state.value.nazivTipaProizvoda,
-                label = { Text(text = "Tip proizvoda") },
-                onValueChange = {
 
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-                    .onGloballyPositioned { coordinates ->
-                        tipoviTextFieldSize = coordinates.size.toSize()
-                    },
-                enabled = state.value.isEditEnabled,
-                trailingIcon = {
-                    Icon(icon,"",
-                        Modifier.clickable { expanded = !expanded })
-                }
-            )
-            DropdownMenu(
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.width(with(LocalDensity.current){tipoviTextFieldSize.width.toDp()}).padding(16.dp)
+                onExpandedChange = {
+                    if (state.value.isEditEnabled) {
+                        expanded = !expanded
+                    }
+                }
             ) {
-                state.value.tipoviProizvoda.forEach {  tipProizvoda ->
-                    DropdownMenuItem(
-                        onClick = {
-                            viewModel.onEvent(ProizvodViewEvent.OnDropdownItemSelect(tipProizvoda))
-                            expanded = false
+                OutlinedTextField(
+                    readOnly = true,
+                    value = state.value.nazivTipaProizvoda,
+                    onValueChange = {},
+                    label = { Text("Tip proizvoda") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    enabled = state.value.isEditEnabled,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    },
+                ) {
+                    state.value.tipoviProizvoda.forEach { tipProizvoda ->
+                        DropdownMenuItem(
+                            onClick = {
+                                viewModel.onEvent(ProizvodViewEvent.SelectTipProizvoda(tipProizvoda))
+                            }
+                        ) {
+
                         }
-                    ) {
-                        Text(text = tipProizvoda.naziv_tipa_proizvoda)
                     }
                 }
             }
@@ -144,10 +182,8 @@ fun ProizvodViewScreen(
                         thickness = 1.dp,
                         modifier = Modifier.padding(4.dp)
                     )
-
                 }
             }
-
         }
     }
 }

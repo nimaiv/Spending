@@ -6,5 +6,6 @@ data class AddRacunUseCases(
     val extractProductInfoFromOCR: ExtractProductInfoFromOCR,
     val insertProizvodiKupnja: InsertProizvodiKupnja,
     val getProizvod: GetProizvod,
-    val getProizvodInfoFromBarcode: GetProizvodInfoFromBarcode
+    val getProizvodInfoFromBarcode: GetProizvodInfoFromBarcode,
+    val downdloadImage: DownloadImage
 )
