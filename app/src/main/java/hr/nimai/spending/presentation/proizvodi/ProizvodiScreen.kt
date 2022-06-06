@@ -15,6 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
+import hr.nimai.spending.presentation.add_racun.AddRacunEvent
 import hr.nimai.spending.presentation.destinations.ProizvodViewScreenDestination
 import hr.nimai.spending.presentation.proizvodi.components.ProizvodItem
 
@@ -22,11 +25,23 @@ import hr.nimai.spending.presentation.proizvodi.components.ProizvodItem
 @Destination
 fun ProizvodiScreen(
     navigator: DestinationsNavigator,
-    viewModel: ProizvodiViewModel = hiltViewModel()
+    viewModel: ProizvodiViewModel = hiltViewModel(),
+    resultRecipient: ResultRecipient<ProizvodViewScreenDestination, Int>
 ) {
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
-    
+
+    resultRecipient.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> {
+
+            }
+            is NavResult.Value -> {
+                viewModel.onEvent(ProizvodiEvent.RemoveProizvod(result.value))
+            }
+        }
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
     ) { padding ->

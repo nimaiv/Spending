@@ -1,6 +1,5 @@
 package hr.nimai.spending.domain.use_case
 
-import android.content.Context
 import android.util.Log
 import hr.nimai.spending.domain.util.GetImageService
 import okhttp3.ResponseBody

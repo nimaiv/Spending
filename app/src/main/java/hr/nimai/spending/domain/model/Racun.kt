@@ -3,13 +3,15 @@ package hr.nimai.spending.domain.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.SET_NULL
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
 @Entity(foreignKeys = [ForeignKey(entity = Trgovina::class,
                                     parentColumns = ["id_trgovine"],
                                     childColumns = ["id_trgovine"],
-                                    onDelete = SET_NULL)])
+                                    onDelete = SET_NULL)],
+        indices = [Index(value = ["broj_racuna"])])
 data class Racun(
     @PrimaryKey(autoGenerate = true) val id_racuna: Int,
     val broj_racuna: String,

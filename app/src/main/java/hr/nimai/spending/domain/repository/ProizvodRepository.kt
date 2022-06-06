@@ -16,4 +16,8 @@ interface ProizvodRepository {
     suspend fun updateProizvod(proizvod: Proizvod)
 
     suspend fun deleteProizvod(proizvod: Proizvod)
+
+    suspend fun deleteSlikuProizvoda(idProizvoda: Int)
+
+    suspend fun updateSlikaProizvoda(idProizvoda: Int, uriSlikeProizvoda: String)
 }

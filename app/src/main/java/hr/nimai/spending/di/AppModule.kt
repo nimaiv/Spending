@@ -116,7 +116,11 @@ object AppModule {
             getKupnjeProizvoda = GetKupnjeProizvoda(kupnjaRepository, racunRepository),
             getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository),
             insertProizvod = InsertProizvod(proizvodRepository),
-            deleteProizvod = DeleteProizvod(proizvodRepository)
+            deleteProizvod = DeleteProizvod(proizvodRepository),
+            getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
+            downloadImage = DownloadImage(),
+            deleteProizvodImage = DeleteProizvodImage(proizvodRepository),
+            updateSlikaProizvoda = UpdateSlikaProizvoda(proizvodRepository)
         )
     }
 

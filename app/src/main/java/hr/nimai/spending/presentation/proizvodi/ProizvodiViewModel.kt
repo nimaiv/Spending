@@ -38,6 +38,13 @@ class ProizvodiViewModel @Inject constructor(
                     }
                 )
             }
+            is ProizvodiEvent.RemoveProizvod -> {
+                val proizvodiShownNew = state.value.proizvodiShown.toMutableList()
+                proizvodiShownNew.removeIf { it.id_proizvoda == event.value }
+                _state.value = state.value.copy(
+                    proizvodiShown = proizvodiShownNew
+                )
+            }
         }
     }
 

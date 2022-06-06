@@ -32,4 +32,12 @@ class ProizvodRepositoryImpl(
     override suspend fun deleteProizvod(proizvod: Proizvod) {
         return dao.deleteProizvod(proizvod)
     }
+
+    override suspend fun deleteSlikuProizvoda(idProizvoda: Int) {
+        return dao.deleteSlikuProizvoda(idProizvoda)
+    }
+
+    override suspend fun updateSlikaProizvoda(idProizvoda: Int, uriSlikeProizvoda: String) {
+        return dao.updateSlikaProizvoda(idProizvoda, uriSlikeProizvoda)
+    }
 }

@@ -18,6 +18,12 @@ interface ProizvodDao {
     @Query("SELECT * FROM proizvod WHERE skraceni_naziv_proizvoda = :skraceniNazivProizvoda")
     suspend fun getProizvodBySkraceniNaziv(skraceniNazivProizvoda: String): Proizvod?
 
+    @Query("UPDATE proizvod SET uri_slike = null WHERE id_proizvoda = :idProizvoda")
+    suspend fun deleteSlikuProizvoda(idProizvoda: Int)
+
+    @Query("UPDATE proizvod SET uri_slike = :uriSlikeProizvoda WHERE id_proizvoda = :idProizvoda")
+    suspend fun updateSlikaProizvoda(idProizvoda: Int, uriSlikeProizvoda: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProizvod(proizvod: Proizvod): Long
 

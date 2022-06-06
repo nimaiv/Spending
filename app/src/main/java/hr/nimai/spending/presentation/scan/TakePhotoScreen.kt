@@ -1,28 +1,30 @@
 package hr.nimai.spending.presentation.scan
 
-import androidx.camera.core.ExperimentalGetImage
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
+import android.annotation.SuppressLint
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import hr.nimai.spending.presentation.destinations.AddRacunScreenDestination
+import com.ramcosta.composedestinations.result.ResultBackNavigator
+import hr.nimai.spending.presentation.destinations.ProizvodViewScreenDestination
 import hr.nimai.spending.presentation.scan.components.CameraView
 import kotlinx.coroutines.flow.collectLatest
 
-@Composable
+@SuppressLint("UnsafeOptInUsageError")
 @Destination
-@ExperimentalGetImage
-fun RacunScanScreen(
+@Composable
+fun TakePhotoScreen(
     navigator: DestinationsNavigator,
-    viewModel: RacunScanViewModel = hiltViewModel()
+    viewModel: TakePhotoViewModel = hiltViewModel(),
+    resultBackNavigator: ResultBackNavigator<ByteArray>
 ) {
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
-                is RacunScanViewModel.UiEvent.ScanComplete -> {
-                    navigator.navigate(AddRacunScreenDestination(event.ocrText, event.imageByteArray))
+                is TakePhotoViewModel.UiEvent.ReturnImage -> {
+                    resultBackNavigator.navigateBack(event.imageByteArray)
                 }
             }
         }

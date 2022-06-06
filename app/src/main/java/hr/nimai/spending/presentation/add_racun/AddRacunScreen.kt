@@ -1,6 +1,7 @@
 package hr.nimai.spending.presentation.add_racun
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Destination
 fun AddRacunScreen(
     ocrText: String,
+    image: ByteArray,
     navigator: DestinationsNavigator,
     resultRecipientProizvod: ResultRecipient<SelectProizvodScreenDestination, Int>,
     resultRecipientBarcode: ResultRecipient<BarcodeScanScreenDestination, String>,

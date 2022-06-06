@@ -1,14 +1,12 @@
 package hr.nimai.spending.presentation.add_racun
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import hr.nimai.spending.domain.model.InvalidRacunException
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.use_case.AddRacunUseCases
@@ -70,6 +68,12 @@ class AddRacunViewModel @Inject constructor(
     )
     val dialogState: State<DialogState> = _dialogState
 
+    private val _uriSlike = mutableStateOf("")
+    val uriSlike: State<String> = _uriSlike
+
+    private val _slika = mutableStateOf<ByteArray?>(null)
+    val slika: State<ByteArray?> = _slika
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -88,6 +92,7 @@ class AddRacunViewModel @Inject constructor(
         _ocrTekst.value = ocrTekst.value.copy(
             text = racun.ocr_tekst!!
         )
+        _slika.value = savedStateHandle.get<ByteArray>("image")
 
         viewModelScope.launch {
             _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
@@ -222,6 +227,14 @@ class AddRacunViewModel @Inject constructor(
             is AddRacunEvent.SaveRacun -> {
                 viewModelScope.launch {
                     try {
+                        val context = event.context
+                        var uriSlike = ""
+                        if (slika.value != null) {
+                            uriSlike = "racun${brojRacuna.value.text.hashCode()}.jpg"
+                            context.openFileOutput(uriSlike, Context.MODE_PRIVATE).use {
+                                it.write(slika.value)
+                            }
+                        }
                         val idRacuna = addRacunUseCases.insertRacun(
                             Racun(
                                 id_racuna = 0,
@@ -230,21 +243,23 @@ class AddRacunViewModel @Inject constructor(
                                 ukupan_iznos_racuna = ukupanIznos.value.text.toDouble(),
                                 datum_racuna = datumRacuna.value.text,
                                 ocr_tekst = ocrTekst.value.text,
+                                uri_slike = uriSlike
                             )
                         )
                         addRacunUseCases.insertProizvodiKupnja(
                             proizvodi = proizvodiState.value,
                             idRacuna = idRacuna
                         )
+
                         proizvodiState.value.forEach { proizvod ->
                             if (proizvod.slika != null) {
-                                val context = event.context
                                 val fileName = "${proizvod.barkod}.jpg"
                                 context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
                                     it.write(proizvod.slika)
                                 }
                             }
                         }
+
                         _eventFlow.emit(UiEvent.SaveRacun)
                     } catch (e: InvalidRacunException) {
                         _eventFlow.emit(
@@ -307,7 +322,8 @@ class AddRacunViewModel @Inject constructor(
                                 barkod = event.barcode,
                                 nazivProizvoda = proizvod.title,
                                 uriSlike = "${event.barcode}.jpg",
-                                slika = image
+                                slika = image,
+                                isNazivEmptyError = false,
                             )
                         }
                     } else {

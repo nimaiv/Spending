@@ -18,6 +18,7 @@ import coil.request.ImageRequest
 import hr.nimai.spending.R
 import hr.nimai.spending.domain.model.Proizvod
 import java.io.File
+import java.io.FileInputStream
 
 @Composable
 fun ProizvodItem(
@@ -51,9 +52,14 @@ fun ProizvodItem(
                 modifier = Modifier.size(64.dp),
                 elevation = 2.dp
             ) {
-                if (!proizvod.uri_slike.isNullOrEmpty()) {
+                val image = try{
+                    context.openFileInput(proizvod.uri_slike)
+                } catch (e: Exception) {
+                    null
+                }
+                if (image != null) {
                     AsyncImage(
-                        model = ImageRequest.Builder(context).data(context.openFileInput(proizvod.uri_slike).readBytes()).build(),
+                        model = ImageRequest.Builder(context).data(image.readBytes()).build(),
                         contentDescription = "Slika",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()

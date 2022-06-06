@@ -1,6 +1,9 @@
 package hr.nimai.spending.domain.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.Image
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -38,4 +41,12 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
             continuation.resume(cameraProvider.get())
         }, ContextCompat.getMainExecutor(this))
     }
+}
+
+fun Image.toBitmap(): Bitmap {
+    val buffer = planes[0].buffer
+    buffer.rewind()
+    val bytes = ByteArray(buffer.capacity())
+    buffer.get(bytes)
+    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 }
