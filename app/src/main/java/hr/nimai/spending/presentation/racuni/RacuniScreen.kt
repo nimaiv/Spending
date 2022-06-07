@@ -111,7 +111,7 @@ fun RacuniScreen(
                         RacunItem(
                             datum = racun.datum_racuna,
                             iznos = racun.ukupan_iznos_racuna,
-                            naziv_trgovine = "Test1",
+                            naziv_trgovine = racun.naziv_trgovine,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {

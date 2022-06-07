@@ -10,6 +10,9 @@ interface TrgovinaDao {
     @Query("SELECT * FROM trgovina")
     fun getAll(): Flow<List<Trgovina>>
 
+    @Query("SELECT * FROM trgovina")
+    suspend fun getTrgovineSuspend(): List<Trgovina>
+
     @Query("SELECT * FROM trgovina WHERE id_trgovine = :id")
     suspend fun getTrgovinaById(id: Int): Trgovina?
 

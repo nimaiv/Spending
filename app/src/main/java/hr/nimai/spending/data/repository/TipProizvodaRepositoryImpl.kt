@@ -29,7 +29,7 @@ class TipProizvodaRepositoryImpl(
         return dao.updateTipProizvoda(tipProizvoda)
     }
 
-    override suspend fun deleteTipProizvoda(tipProizvoda: TipProizvoda) {
-        return dao.deleteTipProizvoda(tipProizvoda)
+    override suspend fun deleteTipProizvoda(idTipaProizvoda: Int) {
+        return dao.deleteTipProizvoda(idTipaProizvoda)
     }
 }

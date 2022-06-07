@@ -61,7 +61,7 @@ object AppModule {
     @Singleton
     fun provideRacunUseCases(repository: RacunRepository): RacunUseCases {
         return RacunUseCases(
-            getRacuni = GetRacuni(repository),
+            getRacuniWithTrgovina = GetRacuniWithTrgovina(repository),
             deleteRacun = DeleteRacun(repository)
         )
     }
@@ -80,7 +80,8 @@ object AppModule {
     fun provideAddRacunUseCases(
         racunRepository: RacunRepository,
         proizvodRepository: ProizvodRepository,
-        kupnjaRepository: KupnjaRepository
+        kupnjaRepository: KupnjaRepository,
+        trgovinaRepository: TrgovinaRepository
     ): AddRacunUseCases {
         return AddRacunUseCases(
             insertRacun = InsertRacun(racunRepository),
@@ -89,7 +90,8 @@ object AppModule {
             insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository),
             getProizvod = GetProizvod(proizvodRepository),
             getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
-            downdloadImage = DownloadImage()
+            downdloadImage = DownloadImage(),
+            getTrgovineSuspend = GetTrgovineSuspend(trgovinaRepository)
         )
     }
 
@@ -114,7 +116,7 @@ object AppModule {
         return ProizvodViewUseCases(
             getProizvod = GetProizvod(proizvodRepository),
             getKupnjeProizvoda = GetKupnjeProizvoda(kupnjaRepository, racunRepository),
-            getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository),
+            getTipoviProizvoda = GetTipoviProizvodaSuspend(tipProizvodaRepository),
             insertProizvod = InsertProizvod(proizvodRepository),
             deleteProizvod = DeleteProizvod(proizvodRepository),
             getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
@@ -154,6 +156,18 @@ object AppModule {
     fun provideBarcodeScanUseCases(): BarcodeScanUseCases {
         return BarcodeScanUseCases(
             parseBarcode = ParseBarcode()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTipoviProizvodaUseCases(
+        tipProizvodaRepository: TipProizvodaRepository
+    ): TipoviProizvodaUseCases {
+        return TipoviProizvodaUseCases(
+            getTipoviProizvoda = GetTipoviProizvoda(tipProizvodaRepository),
+            insertTipProizvoda = InsertTipProizvoda(tipProizvodaRepository),
+            deleteTipProizvoda = DeleteTipProizvoda(tipProizvodaRepository)
         )
     }
 }

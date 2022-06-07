@@ -1,11 +1,15 @@
 package hr.nimai.spending.domain.repository
 
 import hr.nimai.spending.domain.model.Racun
+import hr.nimai.spending.domain.model.Trgovina
+import hr.nimai.spending.domain.util.RacunTrgovina
 import kotlinx.coroutines.flow.Flow
 
 interface RacunRepository {
 
     fun getAll(): Flow<List<Racun>>
+
+    fun getAllWithTrgovina(): Flow<List<RacunTrgovina>>
 
     suspend fun getRacunById(id: Int): Racun?
 

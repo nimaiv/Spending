@@ -1,17 +1,12 @@
 package hr.nimai.spending.presentation.composables
 
 import androidx.annotation.StringRes
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DocumentScanner
-import androidx.compose.material.icons.filled.Receipt
-import androidx.compose.material.icons.filled.Shop
-import androidx.compose.material.icons.filled.ShoppingBasket
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.navigation.navigate
@@ -54,7 +49,9 @@ fun BottomBar(
                        )
                 },
                 label = {
-                    Text(text = stringResource(id = destination.label))
+                    Text(
+                        text = stringResource(id = destination.label)
+                    )
                 }
             )
         }
@@ -67,7 +64,7 @@ enum class BottomBarItem(
     @StringRes val label: Int
 ) {
     Racuni(RacuniScreenDestination, Icons.Default.Receipt, R.string.racuni_screen),
-    Skeniraj(RacunScanScreenDestination, Icons.Default.DocumentScanner, R.string.scan_screen),
     Proizvodi(ProizvodiScreenDestination, Icons.Default.ShoppingBasket, R.string.proizvodi_screen),
-    Trgovine(TrgovineScreenDestination, Icons.Default.Shop, R.string.trgovine_screen)
+    Trgovine(TrgovineScreenDestination, Icons.Default.Store, R.string.trgovine_screen),
+    Potrosnja(PotrosnjaScreenDestination, Icons.Default.ShowChart, R.string.potrosnja_screen)
 }

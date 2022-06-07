@@ -4,11 +4,11 @@ import hr.nimai.spending.domain.model.TipProizvoda
 import hr.nimai.spending.domain.repository.TipProizvodaRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetTipoviProizvoda(
+class GetTipoviProizvodaSuspend(
     private val tipProizvodaRepository: TipProizvodaRepository
 ) {
 
-    operator fun invoke(): Flow<List<TipProizvoda>> {
-        return tipProizvodaRepository.getAll()
+    suspend operator fun invoke(): List<TipProizvoda> {
+        return tipProizvodaRepository.getAllSuspend()
     }
 }

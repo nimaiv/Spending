@@ -1,6 +1,7 @@
 package hr.nimai.spending.presentation.add_racun
 
 import android.content.Context
+import hr.nimai.spending.domain.model.Trgovina
 import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 
 sealed class AddRacunEvent {
@@ -17,6 +18,7 @@ sealed class AddRacunEvent {
     data class DeleteProizvod(val index: Int): AddRacunEvent()
     data class GetDataWithBarcode(val barcode: String): AddRacunEvent()
     data class SaveRacun(val context: Context): AddRacunEvent()
+    data class SelectTrgovina(val trgovina: Trgovina) : AddRacunEvent()
     object ScanBarcode: AddRacunEvent()
     object EditProizvodValues: AddRacunEvent()
     object AddNewProizvodDialog: AddRacunEvent()

@@ -22,8 +22,8 @@ interface TipProizvodaDao {
     @Update
     suspend fun updateTipProizvoda(tipProizvoda: TipProizvoda)
 
-    @Delete
-    suspend fun deleteTipProizvoda(tipProizvoda: TipProizvoda)
+    @Query("DELETE FROM tip_proizvoda WHERE id_tipa_proizvoda = :idTipaProizvoda")
+    suspend fun deleteTipProizvoda(idTipaProizvoda: Int)
 
 
 }

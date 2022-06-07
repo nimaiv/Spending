@@ -10,8 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +29,7 @@ import hr.nimai.spending.presentation.destinations.RacuniScreenDestination
 import hr.nimai.spending.presentation.destinations.SelectProizvodScreenDestination
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "ShowToast")
 @Composable
 @Destination
@@ -41,13 +41,11 @@ fun AddRacunScreen(
     resultRecipientBarcode: ResultRecipient<BarcodeScanScreenDestination, String>,
     viewModel: AddRacunViewModel = hiltViewModel()
 ) {
-    val brojRacunaState = viewModel.brojRacuna.value
-    val idTrgovineState = viewModel.idTrgovine.value
-    val ukupanIznosState = viewModel.ukupanIznos.value
-    val datumRacunaState = viewModel.datumRacuna.value
-    val ocrTekstState = viewModel.ocrTekst.value
-    val proizvodiState = viewModel.proizvodiState.value
+
+    val state = viewModel.state.value
     val dialogState = viewModel.dialogState.value
+
+    var expanded by remember { mutableStateOf(false) }
 
     val scaffoldState = rememberScaffoldState()
 
@@ -120,8 +118,8 @@ fun AddRacunScreen(
                         .padding(16.dp)
                 ) {
                     hr.nimai.spending.presentation.add_racun.components.RacunTextField(
-                        text = brojRacunaState.text,
-                        label = brojRacunaState.label,
+                        text = state.brojRacuna,
+                        label = "Broj računa",
                         onValueChange = {
                             viewModel.onEvent(AddRacunEvent.EnteredBrojRacuna(it))
                         },
@@ -130,8 +128,8 @@ fun AddRacunScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     hr.nimai.spending.presentation.add_racun.components.RacunTextField(
-                        text = ukupanIznosState.text,
-                        label = ukupanIznosState.label,
+                        text = state.ukupanIznos,
+                        label = "Ukupan iznos",
                         onValueChange = {
                             viewModel.onEvent(AddRacunEvent.EnteredUkupanIznos(it))
                         },
@@ -140,8 +138,8 @@ fun AddRacunScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     hr.nimai.spending.presentation.add_racun.components.RacunTextField(
-                        text = datumRacunaState.text,
-                        label = datumRacunaState.label,
+                        text = state.datumRacuna,
+                        label = "Datum računa",
                         onValueChange = {
                             viewModel.onEvent(AddRacunEvent.EnteredDatumRacuna(it))
                         },
@@ -149,19 +147,50 @@ fun AddRacunScreen(
                         singleLine = true
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    hr.nimai.spending.presentation.add_racun.components.RacunTextField(
-                        text = idTrgovineState.text,
-                        label = idTrgovineState.label,
-                        onValueChange = {
-                            viewModel.onEvent(AddRacunEvent.EnteredTrgovina(it))
-                        },
-                        textStyle = MaterialTheme.typography.h5,
-                        singleLine = true
-                    )
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = {
+                                expanded = !expanded
+                        }
+                    ) {
+                        OutlinedTextField(
+                            readOnly = true,
+                            value = state.nazivTrgovine,
+                            onValueChange = {},
+                            label = { Text("Trgovina") },
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                            },
+                            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = {
+                                expanded = false
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            state.trgovine.forEach { trgovina ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        viewModel.onEvent(AddRacunEvent.SelectTrgovina(trgovina))
+                                        expanded = false
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(text = trgovina.naziv_trgovine)
+                                }
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     hr.nimai.spending.presentation.add_racun.components.RacunTextField(
-                        text = ocrTekstState.text,
-                        label = ocrTekstState.label,
+                        text = state.ocrTekst,
+                        label = "Očitan tekst računa",
                         modifier = Modifier.fillMaxHeight(),
                         onValueChange = {
 
@@ -183,7 +212,7 @@ fun AddRacunScreen(
                     }
                 }
             }
-            itemsIndexed(proizvodiState) { index, proizvod ->
+            itemsIndexed(state.proizvodi) { index, proizvod ->
                 ProizvodItem(
                     naziv = proizvod.naziv_proizvoda,
                     cijena = proizvod.cijena,
@@ -215,7 +244,7 @@ fun AddRacunScreen(
                     Button(
                         onClick = {
                             navigator.navigate(SelectProizvodScreenDestination(
-                                proizvodiState.map { it.id_proizvoda }.toHashSet().toIntArray())
+                                state.proizvodi.map { it.id_proizvoda }.toHashSet().toIntArray())
                             )
                         },
                         modifier = Modifier.padding(4.dp)

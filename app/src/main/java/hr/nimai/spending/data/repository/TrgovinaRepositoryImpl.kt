@@ -13,6 +13,10 @@ class TrgovinaRepositoryImpl(
         return dao.getAll()
     }
 
+    override suspend fun getTrgovineSuspend(): List<Trgovina> {
+        return dao.getTrgovineSuspend()
+    }
+
     override suspend fun getTrgovinaById(id: Int): Trgovina? {
         return dao.getTrgovinaById(id)
     }

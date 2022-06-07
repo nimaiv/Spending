@@ -1,7 +1,5 @@
 package hr.nimai.spending.presentation.proizvod_view
 
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import hr.nimai.spending.domain.model.TipProizvoda
 import hr.nimai.spending.domain.util.KupnjaDatum

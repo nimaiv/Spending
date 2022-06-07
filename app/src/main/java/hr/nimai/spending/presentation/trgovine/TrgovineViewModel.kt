@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hr.nimai.spending.domain.model.Trgovina
 import hr.nimai.spending.domain.use_case.TrgovineUseCases
-import hr.nimai.spending.domain.util.RacunOrder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,7 +39,7 @@ class TrgovineViewModel @Inject constructor(
                     nazivTrgovine = event.value
                 )
             }
-            is TrgovineEvent.AddTrgovnaDialog -> {
+            is TrgovineEvent.AddTrgovinaDialog -> {
                 _state.value = state.value.copy(
                     isDialogOpen = true,
                     nazivTrgovine = "",

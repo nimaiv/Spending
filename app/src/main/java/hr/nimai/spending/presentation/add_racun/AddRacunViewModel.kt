@@ -22,43 +22,8 @@ class AddRacunViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _brojRacuna = mutableStateOf(
-        RacunTextFieldState(
-            label = "Broj računa"
-        )
-    )
-    val brojRacuna: State<RacunTextFieldState> = _brojRacuna
-
-    private val _idTrgovine = mutableStateOf(
-        RacunTextFieldState(
-            label = "Trgovina"
-        )
-    )
-    val idTrgovine: State<RacunTextFieldState> = _idTrgovine
-
-    private val _ukupanIznos = mutableStateOf(
-        RacunTextFieldState(
-            label = "Ukupan iznos"
-        )
-    )
-    val ukupanIznos: State<RacunTextFieldState> = _ukupanIznos
-
-    private val _datumRacuna = mutableStateOf(
-        RacunTextFieldState(
-            label = "Datum računa"
-        )
-    )
-    val datumRacuna: State<RacunTextFieldState> = _datumRacuna
-
-    private val _ocrTekst = mutableStateOf(
-        RacunTextFieldState(
-            label = "Tekst skeniranog računa"
-        )
-    )
-    val ocrTekst: State<RacunTextFieldState> = _ocrTekst
-
-    private val _proizvodiState = mutableStateOf<List<KupnjaProizvodaHolder>>(emptyList())
-    val proizvodiState: State<List<KupnjaProizvodaHolder>> = _proizvodiState
+    private val _state = mutableStateOf(AddRacunState())
+    val state: State<AddRacunState> = _state
 
     private val _dialogState = mutableStateOf(
         DialogState(
@@ -68,11 +33,6 @@ class AddRacunViewModel @Inject constructor(
     )
     val dialogState: State<DialogState> = _dialogState
 
-    private val _uriSlike = mutableStateOf("")
-    val uriSlike: State<String> = _uriSlike
-
-    private val _slika = mutableStateOf<ByteArray?>(null)
-    val slika: State<ByteArray?> = _slika
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -80,45 +40,43 @@ class AddRacunViewModel @Inject constructor(
     init {
         val ocrText = savedStateHandle.get<String>("ocrText")
         val racun = addRacunUseCases.readOCRToRacun(ocrText!!)
-        _brojRacuna.value = brojRacuna.value.copy(
-            text = racun.broj_racuna
+
+        _state.value = state.value.copy(
+            slika = savedStateHandle.get<ByteArray>("image"),
+            brojRacuna = racun.broj_racuna,
+            ukupanIznos = racun.ukupan_iznos_racuna.toString(),
+            datumRacuna = racun.datum_racuna,
+            ocrTekst = racun.ocr_tekst!!
         )
-        _ukupanIznos.value = ukupanIznos.value.copy(
-            text = racun.ukupan_iznos_racuna.toString()
-        )
-        _datumRacuna.value = datumRacuna.value.copy(
-            text = racun.datum_racuna
-        )
-        _ocrTekst.value = ocrTekst.value.copy(
-            text = racun.ocr_tekst!!
-        )
-        _slika.value = savedStateHandle.get<ByteArray>("image")
 
         viewModelScope.launch {
-            _proizvodiState.value = addRacunUseCases.extractProductInfoFromOCR(ocrText)
+            _state.value = state.value.copy(
+                proizvodi = addRacunUseCases.extractProductInfoFromOCR(ocrText),
+                trgovine = addRacunUseCases.getTrgovineSuspend()
+            )
         }
     }
 
     fun onEvent(event: AddRacunEvent) {
         when (event) {
             is AddRacunEvent.EnteredBrojRacuna -> {
-                _brojRacuna.value = brojRacuna.value.copy(
-                    text = event.value
+                _state.value = state.value.copy(
+                    brojRacuna = event.value
                 )
             }
             is AddRacunEvent.EnteredDatumRacuna -> {
-                _datumRacuna.value = datumRacuna.value.copy(
-                    text = event.value
+                _state.value = state.value.copy(
+                    datumRacuna = event.value
                 )
             }
             is AddRacunEvent.EnteredTrgovina -> {
-                _idTrgovine.value = idTrgovine.value.copy(
-                    text = event.value
+                _state.value = state.value.copy(
+                    nazivTrgovine = event.value
                 )
             }
             is AddRacunEvent.EnteredUkupanIznos -> {
-                _ukupanIznos.value = ukupanIznos.value.copy(
-                    text = event.value
+                _state.value = state.value.copy(
+                    ukupanIznos = event.value
                 )
             }
             is AddRacunEvent.OpenDialog -> {
@@ -203,7 +161,7 @@ class AddRacunViewModel @Inject constructor(
                         showErrorMessage = true
                     )
                 } else {
-                    val proizvodi = proizvodiState.value.toMutableList()
+                    val proizvodi = state.value.proizvodi.toMutableList()
                     val proizvod = KupnjaProizvodaHolder(
                         naziv_proizvoda = dialogState.value.nazivProizvoda,
                         skraceni_naziv_proizvoda = dialogState.value.skraceniNazivProizvoda,
@@ -218,7 +176,9 @@ class AddRacunViewModel @Inject constructor(
                     } else {
                         proizvodi[dialogState.value.id!!] = proizvod
                     }
-                    _proizvodiState.value = proizvodi
+                    _state.value = state.value.copy(
+                        proizvodi = proizvodi
+                    )
                     _dialogState.value = dialogState.value.copy(
                         isDialogOpen = false
                     )
@@ -229,29 +189,29 @@ class AddRacunViewModel @Inject constructor(
                     try {
                         val context = event.context
                         var uriSlike = ""
-                        if (slika.value != null) {
-                            uriSlike = "racun${brojRacuna.value.text.hashCode()}.jpg"
+                        if (state.value.slika != null) {
+                            uriSlike = "racun${state.value.brojRacuna.hashCode()}.jpg"
                             context.openFileOutput(uriSlike, Context.MODE_PRIVATE).use {
-                                it.write(slika.value)
+                                it.write(state.value.slika)
                             }
                         }
                         val idRacuna = addRacunUseCases.insertRacun(
                             Racun(
                                 id_racuna = 0,
-                                broj_racuna = brojRacuna.value.text,
-                                id_trgovine = idTrgovine.value.text.toIntOrNull(),
-                                ukupan_iznos_racuna = ukupanIznos.value.text.toDouble(),
-                                datum_racuna = datumRacuna.value.text,
-                                ocr_tekst = ocrTekst.value.text,
+                                broj_racuna = state.value.brojRacuna,
+                                id_trgovine = state.value.idTrgovine,
+                                ukupan_iznos_racuna = state.value.ukupanIznos.toDouble(),
+                                datum_racuna = state.value.datumRacuna,
+                                ocr_tekst = state.value.ocrTekst,
                                 uri_slike = uriSlike
                             )
                         )
                         addRacunUseCases.insertProizvodiKupnja(
-                            proizvodi = proizvodiState.value,
+                            proizvodi = state.value.proizvodi,
                             idRacuna = idRacuna
                         )
 
-                        proizvodiState.value.forEach { proizvod ->
+                        state.value.proizvodi.forEach { proizvod ->
                             if (proizvod.slika != null) {
                                 val fileName = "${proizvod.barkod}.jpg"
                                 context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
@@ -289,7 +249,7 @@ class AddRacunViewModel @Inject constructor(
             is AddRacunEvent.AddExistingProizvod -> {
                 viewModelScope.launch {
                     val proizvod = addRacunUseCases.getProizvod(event.idProizvoda)
-                    val proizvodi  = proizvodiState.value.toMutableList()
+                    val proizvodi  = state.value.proizvodi.toMutableList()
                     proizvodi.add(KupnjaProizvodaHolder(
                         naziv_proizvoda = proizvod.naziv_proizvoda,
                         skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
@@ -299,14 +259,18 @@ class AddRacunViewModel @Inject constructor(
                         barkod = proizvod.barkod,
                         uriSlike = proizvod.uri_slike
                     ))
-                    _proizvodiState.value = proizvodi
+                    _state.value = state.value.copy(
+                        proizvodi = proizvodi
+                    )
                 }
 
             }
             is AddRacunEvent.DeleteProizvod -> {
-                val proizvodi = proizvodiState.value.toMutableList()
+                val proizvodi = state.value.proizvodi.toMutableList()
                 proizvodi.removeAt(event.index)
-                _proizvodiState.value = proizvodi
+                _state.value = state.value.copy(
+                    proizvodi = proizvodi
+                )
             }
             is AddRacunEvent.ScanBarcode -> {
                 viewModelScope.launch {
@@ -335,6 +299,12 @@ class AddRacunViewModel @Inject constructor(
                         }
                     }
                 }
+            }
+            is AddRacunEvent.SelectTrgovina -> {
+                _state.value = state.value.copy(
+                    idTrgovine = event.trgovina.id_trgovine,
+                    nazivTrgovine = event.trgovina.naziv_trgovine
+                )
             }
         }
     }

@@ -15,5 +15,5 @@ interface TipProizvodaRepository {
 
     suspend fun updateTipProizvoda(tipProizvoda: TipProizvoda)
 
-    suspend fun deleteTipProizvoda(tipProizvoda: TipProizvoda)
+    suspend fun deleteTipProizvoda(idTipaProizvoda: Int)
 }

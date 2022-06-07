@@ -47,7 +47,7 @@ class RacuniViewModel @Inject constructor(
 
     private fun getRacuni(racunOrder: RacunOrder) {
         getRacuniJob?.cancel()
-        getRacuniJob = racunUseCases.getRacuni(racunOrder)
+        getRacuniJob = racunUseCases.getRacuniWithTrgovina(racunOrder)
             .onEach { racuni ->
                 _state.value = state.value.copy(
                     racuni = racuni,

@@ -14,7 +14,7 @@ fun RacunItem(
     datum: String,
     iznos: Double,
     modifier: Modifier = Modifier,
-    naziv_trgovine: String = "",
+    naziv_trgovine: String?,
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.primary,
@@ -32,10 +32,17 @@ fun RacunItem(
                     text = datum,
                     style = MaterialTheme.typography.h6
                 )
-                Text(
-                    text = naziv_trgovine,
-                    style = MaterialTheme.typography.h6
-                )
+                if (naziv_trgovine != null) {
+                    Text(
+                        text = naziv_trgovine,
+                        style = MaterialTheme.typography.h6
+                    )
+                } else {
+                    Text(
+                        text = "Trgovina nije dodjeljena",
+                        style = MaterialTheme.typography.caption
+                    )
+                }
             }
             Text(
                 text = iznos.toString() + "kn",

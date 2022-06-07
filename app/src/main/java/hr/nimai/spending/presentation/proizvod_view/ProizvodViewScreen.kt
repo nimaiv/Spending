@@ -1,5 +1,6 @@
 package hr.nimai.spending.presentation.proizvod_view
 
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.result.ResultRecipient
 import hr.nimai.spending.R
 import hr.nimai.spending.presentation.destinations.BarcodeScanScreenDestination
+import hr.nimai.spending.presentation.destinations.ImageScreenDestination
 import hr.nimai.spending.presentation.destinations.TakePhotoScreenDestination
 import kotlinx.coroutines.flow.collectLatest
 
@@ -199,12 +201,19 @@ fun ProizvodViewScreen(
                     onDismissRequest = {
                         expanded = false
                     },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
                 ) {
                     state.value.tipoviProizvoda.forEach { tipProizvoda ->
                         DropdownMenuItem(
                             onClick = {
                                 viewModel.onEvent(ProizvodViewEvent.SelectTipProizvoda(tipProizvoda))
-                            }
+                                expanded = false
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp)
                         ) {
                             Text(text = tipProizvoda.naziv_tipa_proizvoda)
                         }
@@ -224,7 +233,12 @@ fun ProizvodViewScreen(
                     modifier = Modifier
                         .size(108.dp)
                         .padding(8.dp),
-                    elevation = 2.dp
+                    elevation = 2.dp,
+                    onClick = {
+                        if (state.value.slika != null) {
+                            navigator.navigate(ImageScreenDestination(state.value.slika!!))
+                        }
+                    }
                 ) {
                     if (state.value.slika != null) {
                         AsyncImage(
@@ -263,10 +277,7 @@ fun ProizvodViewScreen(
                         }
                     }
                 }
-
-
             }
-
             Divider(thickness = 1.dp)
             Text(
                 text = "Kupnje:",

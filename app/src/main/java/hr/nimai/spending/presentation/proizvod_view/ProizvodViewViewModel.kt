@@ -136,7 +136,7 @@ class ProizvodViewViewModel @Inject constructor(
             is ProizvodViewEvent.SelectTipProizvoda -> {
                 _state.value = state.value.copy(
                     idTipaProizvoda = event.value.id_tipa_proizvoda,
-                    nazivProizvoda = event.value.naziv_tipa_proizvoda
+                    nazivTipaProizvoda = event.value.naziv_tipa_proizvoda,
                 )
             }
             is ProizvodViewEvent.GetDataWithBarcode -> {

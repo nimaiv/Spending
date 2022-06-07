@@ -7,6 +7,8 @@ interface TrgovinaRepository {
 
     fun getAll(): Flow<List<Trgovina>>
 
+    suspend fun getTrgovineSuspend(): List<Trgovina>
+
     suspend fun getTrgovinaById(id: Int): Trgovina?
 
     suspend fun insertTrgovina(trgovina: Trgovina)
