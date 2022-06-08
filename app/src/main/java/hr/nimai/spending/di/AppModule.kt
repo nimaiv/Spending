@@ -156,7 +156,8 @@ object AppModule {
     ): TrgovineUseCases {
         return TrgovineUseCases(
             getTrgovine = GetTrgovine(trgovinaRepository),
-            insertTrgovina = InsertTrgovina(trgovinaRepository)
+            insertTrgovina = InsertTrgovina(trgovinaRepository),
+            deleteTrgovina = DeleteTrgovina(trgovinaRepository)
         )
     }
 

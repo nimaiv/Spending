@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -35,7 +36,9 @@ fun RacunItem(
                 if (naziv_trgovine != null) {
                     Text(
                         text = naziv_trgovine,
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.caption,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2,
                     )
                 } else {
                     Text(

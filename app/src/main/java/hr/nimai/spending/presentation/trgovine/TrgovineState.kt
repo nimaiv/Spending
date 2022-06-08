@@ -8,4 +8,6 @@ data class TrgovineState(
     val nazivTrgovine: String = "",
     val adresaTrgovine: String = "",
     val idTrgovine: Int = 0,
+    val isNazivError: Boolean = false,
+    val showError: Boolean = false,
 )

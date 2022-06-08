@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import hr.nimai.spending.presentation.trgovine.composables.AddNewTrgovinaDialog
+import hr.nimai.spending.presentation.trgovine.composables.TrgovinaDialog
 import hr.nimai.spending.presentation.trgovine.composables.TrgovinaItem
 
 @Destination
@@ -66,14 +66,14 @@ fun TrgovineScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                //TODO: trgovina screen
+                                viewModel.onEvent(TrgovineEvent.EditTrgovinaDialog(trgovina))
                             },
                     )
                 }
             }
         }
         if (state.isDialogOpen) {
-            AddNewTrgovinaDialog(viewModel = viewModel)
+            TrgovinaDialog(viewModel = viewModel)
         }
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -153,9 +154,13 @@ fun RacunProizvodiScreen(
                 if (state.nazivTrgovine.isBlank()) {
                     Text(text = "-")
                 } else {
-                    Text(text = state.nazivTrgovine)
+                    Text(
+                        text = state.nazivTrgovine,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        modifier = Modifier.weight(2f)
+                    )
                 }
-
             }
             Row() {
                 Text(

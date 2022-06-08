@@ -35,33 +35,73 @@ class TrgovineViewModel @Inject constructor(
                 )
             }
             is TrgovineEvent.EnteredNazivTrgovine -> {
-                _state.value = state.value.copy(
-                    nazivTrgovine = event.value
-                )
+                if (event.value.isNotBlank()) {
+                    _state.value = state.value.copy(
+                        nazivTrgovine = event.value,
+                        isNazivError = false,
+                        showError = false
+                    )
+                } else {
+                    _state.value = state.value.copy(
+                        nazivTrgovine = event.value,
+                        isNazivError = true,
+                    )
+                }
             }
             is TrgovineEvent.AddTrgovinaDialog -> {
                 _state.value = state.value.copy(
                     isDialogOpen = true,
                     nazivTrgovine = "",
                     adresaTrgovine = "",
+                    idTrgovine = 0,
+                    isNazivError = true,
                 )
             }
             is TrgovineEvent.SaveTrgovina -> {
                 viewModelScope.launch {
-                    trgovineUseCases.insertTrgovina(Trgovina(
-                        naziv_trgovine = state.value.nazivTrgovine,
-                        adresa = state.value.adresaTrgovine,
-                        id_trgovine = 0,
-                    ))
+                    if (!state.value.isNazivError) {
+                        trgovineUseCases.insertTrgovina(Trgovina(
+                            naziv_trgovine = state.value.nazivTrgovine,
+                            adresa = state.value.adresaTrgovine,
+                            id_trgovine = state.value.idTrgovine,
+                        ))
+                        _state.value = state.value.copy(
+                            isDialogOpen = false,
+                        )
+                    } else {
+                        _state.value = state.value.copy(
+                            showError = true
+                        )
+                    }
+
                 }
-                _state.value = state.value.copy(
-                    isDialogOpen = false,
-                )
+
             }
             is TrgovineEvent.DismissDialog -> {
                 _state.value = state.value.copy(
                     isDialogOpen = false,
                 )
+            }
+            is TrgovineEvent.EditTrgovinaDialog -> {
+                _state.value = state.value.copy(
+                    nazivTrgovine = event.trgovina.naziv_trgovine,
+                    adresaTrgovine = event.trgovina.adresa?:"",
+                    idTrgovine = event.trgovina.id_trgovine,
+                    isDialogOpen = true,
+                    isNazivError = false
+                )
+            }
+            is TrgovineEvent.DeleteTrgovina -> {
+                viewModelScope.launch {
+                    trgovineUseCases.deleteTrgovina(Trgovina(
+                        id_trgovine = state.value.idTrgovine,
+                        naziv_trgovine = state.value.nazivTrgovine,
+                        adresa = state.value.adresaTrgovine,
+                    ))
+                    _state.value = state.value.copy(
+                        isDialogOpen = false
+                    )
+                }
             }
         }
     }

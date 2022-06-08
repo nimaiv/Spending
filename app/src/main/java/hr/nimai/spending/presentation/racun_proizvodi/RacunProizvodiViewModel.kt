@@ -174,7 +174,8 @@ class RacunProizvodiViewModel @Inject constructor(
                             racunProizvodiUseCases.updateRacun(racun)
                             _state.value = state.value.copy(
                                 racun = racun,
-                                isEditRacunDialogShown = false
+                                isEditRacunDialogShown = false,
+                                nazivTrgovine = editRacunDialogState.value.nazivTrgovine
                             )
                         } else {
                             _editRacunDialogState.value = editRacunDialogState.value.copy(
