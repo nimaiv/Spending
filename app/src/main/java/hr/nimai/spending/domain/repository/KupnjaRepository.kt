@@ -1,6 +1,7 @@
 package hr.nimai.spending.domain.repository
 
 import hr.nimai.spending.domain.model.Kupnja
+import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 import kotlinx.coroutines.flow.Flow
 
 interface KupnjaRepository {
@@ -12,6 +13,8 @@ interface KupnjaRepository {
     suspend fun getKupnjeByIdProizvoda(id_proizvoda: Int): List<Kupnja>
 
     suspend fun getKupnjeByIdRacuna(id_racuna: Int): List<Kupnja>
+
+    fun getKupnjeProizvodaRacuna(id_racuna: Int): Flow<List<KupnjaProizvodaHolder>>
 
     suspend fun insertKupnja(kupnja: Kupnja)
 

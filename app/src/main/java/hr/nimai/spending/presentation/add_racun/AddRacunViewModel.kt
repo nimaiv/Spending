@@ -281,7 +281,7 @@ class AddRacunViewModel @Inject constructor(
                 addRacunUseCases.getProizvodInfoFromBarcode(event.barcode) { proizvodi ->
                     if (proizvodi != null) {
                         val proizvod = proizvodi.products[0]
-                        addRacunUseCases.downdloadImage(proizvod.images[0]) { image ->
+                        addRacunUseCases.downloadImage(proizvod.images[0]) { image ->
                             _dialogState.value = dialogState.value.copy(
                                 barkod = event.barcode,
                                 nazivProizvoda = proizvod.title,

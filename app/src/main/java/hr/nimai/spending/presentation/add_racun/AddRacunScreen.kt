@@ -109,7 +109,6 @@ fun AddRacunScreen(
         },
         scaffoldState = scaffoldState
     ) {
-
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 Column(

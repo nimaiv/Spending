@@ -27,7 +27,7 @@ class ProizvodViewViewModel @Inject constructor(
     private val _state = mutableStateOf(ProizvodViewState())
     val state: State<ProizvodViewState> = _state
 
-    private val _eventFlow = MutableSharedFlow<ProizvodViewViewModel.UiEvent>()
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
@@ -120,7 +120,9 @@ class ProizvodViewViewModel @Inject constructor(
                 )
             }
             is ProizvodViewEvent.DeleteProizvod -> {
-                event.context.deleteFile(state.value.uriSlikeProizvoda)
+                if (!state.value.uriSlikeProizvoda.isNullOrBlank()) {
+                    event.context.deleteFile(state.value.uriSlikeProizvoda)
+                }
                 viewModelScope.launch {
                     proizvodViewUseCases.deleteProizvod(Proizvod(
                         id_proizvoda = state.value.idProizvoda,

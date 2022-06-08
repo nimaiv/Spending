@@ -1,25 +1,29 @@
-package hr.nimai.spending.presentation.add_racun.components
+package hr.nimai.spending.presentation.racun_proizvodi.composables
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import hr.nimai.spending.presentation.add_racun.AddRacunEvent
-import hr.nimai.spending.presentation.add_racun.AddRacunViewModel
-import hr.nimai.spending.presentation.add_racun.DialogState
+import hr.nimai.spending.presentation.add_racun.components.RacunTextField
+import hr.nimai.spending.presentation.racun_proizvodi.RacunProizvodiEvent
+import hr.nimai.spending.presentation.racun_proizvodi.RacunProizvodiViewModel
 
 @Composable
-fun EditProizvodDialog(
-    dialogState: DialogState,
-    viewModel: AddRacunViewModel,
+fun EditKupnjaDialog(
+    viewModel: RacunProizvodiViewModel,
     modifier: Modifier = Modifier,
+    onSelectExistingProizvod: () -> Unit
 ) {
+    val state = viewModel.editKupnjaDialogState.value
+    val context = LocalContext.current
     AlertDialog(
         onDismissRequest = {
-            viewModel.onEvent(AddRacunEvent.DismissDialog)
+            viewModel.onEvent(RacunProizvodiEvent.DismissDialog)
         },
         title = {
             Text(text = "Uredi podatke o proizvodu")
@@ -29,33 +33,49 @@ fun EditProizvodDialog(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
+
+                if (state.isNew) {
+                    Button(onClick = onSelectExistingProizvod) {
+                        Text(text = "Učitaj postojeći proizvod")
+                    }
+                } else {
+                    Button(
+                        onClick = { viewModel.onEvent(RacunProizvodiEvent.DeleteKupnja) },
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red, contentColor = Color.White)
+                    ) {
+                        Text(text = "Obriši")
+                    }
+                }
                 Button(
-                    onClick = { viewModel.onEvent(AddRacunEvent.ScanBarcode) }
+                    onClick = { viewModel.onEvent(RacunProizvodiEvent.ScanBarcode) }
                 ) {
                     Text(text = "Skeniraj")
                 }
+
+
                 RacunTextField(
-                    text = dialogState.nazivProizvoda,
+                    text = state.nazivProizvoda,
                     label = "Naziv proizvoda",
                     onValueChange = {
-                        viewModel.onEvent(AddRacunEvent.EnteredNazivProizvoda(it))
+                        viewModel.onEvent(RacunProizvodiEvent.EnteredNazivProizvoda(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
-                    isError = dialogState.isNazivEmptyError,
+                    isError = state.isNazivEmptyError,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 RacunTextField(
-                    text = dialogState.skraceniNazivProizvoda,
+                    text = state.skraceniNazivProizvoda,
                     label = "Skraćeni naziv proizvoda",
                     onValueChange = {
-                        viewModel.onEvent(AddRacunEvent.EnteredSkraceniNazivProizvoda(it))
+                        viewModel.onEvent(RacunProizvodiEvent.EnteredSkraceniNazivProizvoda(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
-                    isError = dialogState.isSkraceniNazivEmptyError
+                    isError = state.isSkraceniNazivEmptyError
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 RacunTextField(
-                    text = dialogState.barkod,
+                    text = state.barkod,
                     label = "Barkod",
                     onValueChange = {
 
@@ -65,26 +85,26 @@ fun EditProizvodDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 RacunTextField(
-                    text = dialogState.cijenaProizvoda,
+                    text = state.cijenaProizvoda,
                     label = "Cijena proizvoda",
                     onValueChange = {
-                        viewModel.onEvent(AddRacunEvent.EnteredCijenaProizvoda(it))
+                        viewModel.onEvent(RacunProizvodiEvent.EnteredCijenaProizvoda(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
-                    isError = dialogState.isCijenaError
+                    isError = state.isCijenaError
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 RacunTextField(
-                    text = dialogState.kolicinaProizvoda,
+                    text = state.kolicinaProizvoda,
                     label = "Količina",
                     onValueChange = {
-                        viewModel.onEvent(AddRacunEvent.EnteredKolicinaProizvoda(it))
+                        viewModel.onEvent(RacunProizvodiEvent.EnteredKolicinaProizvoda(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
-                    isError = dialogState.isKolicinaError
+                    isError = state.isKolicinaError
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                if (dialogState.showErrorMessage) {
+                if (state.showErrorMessage) {
                     Text(
                         text = "Unesene vrijednosti nisu ispravne!",
                         style = TextStyle(
@@ -94,7 +114,6 @@ fun EditProizvodDialog(
                     )
                 }
             }
-
         },
         buttons = {
             Row(
@@ -104,7 +123,7 @@ fun EditProizvodDialog(
                 Button(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     onClick = {
-                        viewModel.onEvent(AddRacunEvent.DismissDialog)
+                        viewModel.onEvent(RacunProizvodiEvent.DismissDialog)
                     }
                 ) {
                     Text("Odustani")
@@ -112,7 +131,7 @@ fun EditProizvodDialog(
                 Button(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     onClick = {
-                        viewModel.onEvent(AddRacunEvent.EditProizvodValues)
+                        viewModel.onEvent(RacunProizvodiEvent.SaveKupnja(context))
                     }
                 ) {
                     Text("Spremi")

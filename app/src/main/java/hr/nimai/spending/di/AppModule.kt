@@ -90,7 +90,7 @@ object AppModule {
             insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository),
             getProizvod = GetProizvod(proizvodRepository),
             getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
-            downdloadImage = DownloadImage(),
+            downloadImage = DownloadImage(),
             getTrgovineSuspend = GetTrgovineSuspend(trgovinaRepository)
         )
     }
@@ -130,12 +130,22 @@ object AppModule {
     @Singleton
     fun provideRacunProizvodiUseCases(
         racunRepository: RacunRepository,
-        proizvodRepository: ProizvodRepository,
-        kupnjaRepository: KupnjaRepository
+        kupnjaRepository: KupnjaRepository,
+        trgovinaRepository: TrgovinaRepository,
+        proizvodRepository: ProizvodRepository
     ): RacunProizvodiUseCases {
         return RacunProizvodiUseCases(
             getRacun = GetRacun(racunRepository),
-            getKupnjeProizvodaRacuna = GetKupnjeProizvodaRacuna(proizvodRepository, kupnjaRepository)
+            getKupnjeProizvodaRacuna = GetKupnjeProizvodaRacuna(kupnjaRepository),
+            getTrgovina = GetTrgovina(trgovinaRepository),
+            getTrgovineSuspend = GetTrgovineSuspend(trgovinaRepository),
+            updateRacun = UpdateRacun(racunRepository),
+            deleteRacun = DeleteRacun(racunRepository),
+            insertKupnjaProizvoda = InsertKupnjaProizvoda(proizvodRepository, kupnjaRepository),
+            getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
+            downloadImage = DownloadImage(),
+            getProizvod = GetProizvod(proizvodRepository),
+            deleteKupnja = DeleteKupnja(kupnjaRepository)
         )
     }
 

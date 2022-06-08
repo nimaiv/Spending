@@ -97,14 +97,14 @@ fun ProizvodViewScreen(
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(8.dp).fillMaxWidth()
             ) {
                 IconButton(
                     onClick = {
                         resultBackNavigator.navigateBack()
                     },
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 2.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
@@ -115,7 +115,7 @@ fun ProizvodViewScreen(
                 Button(
                     onClick = { viewModel.onEvent(ProizvodViewEvent.ToggleEdit(context)) },
                     modifier = Modifier
-                        .padding(horizontal = 4.dp),
+                        .padding(horizontal = 8.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = state.value.buttonColor)
                 ) {
                     Text(
@@ -125,14 +125,14 @@ fun ProizvodViewScreen(
                 if (state.value.isEditEnabled) {
                     Button(
                         onClick = { viewModel.onEvent(ProizvodViewEvent.DeleteProizvod(context)) },
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                        modifier = Modifier.padding(horizontal = 2.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red, contentColor = Color.White)
                     ) {
                         Text(text = "Obriši")
                     }
                     Button(
                         onClick = { navigator.navigate(BarcodeScanScreenDestination) },
-                        modifier = Modifier.padding(horizontal = 4.dp),
+                        modifier = Modifier.padding(horizontal = 2.dp),
                     ) {
                         Text(text = "Skeniraj")
                     }
