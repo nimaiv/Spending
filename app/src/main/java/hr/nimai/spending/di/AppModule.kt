@@ -181,4 +181,38 @@ object AppModule {
             deleteTipProizvoda = DeleteTipProizvoda(tipProizvodaRepository)
         )
     }
+
+    @Provides
+    @Singleton
+    fun providePotrosnjaUseCases(
+        kupnjaRepository: KupnjaRepository,
+        proizvodRepository: ProizvodRepository,
+        tipProizvodaRepository: TipProizvodaRepository,
+        racunRepository: RacunRepository,
+        trgovinaRepository: TrgovinaRepository
+    ): PotrosnjaUseCases {
+        return PotrosnjaUseCases(
+            getSpending = GetSpending(
+                kupnjaRepository = kupnjaRepository,
+                trgovinaRepository = trgovinaRepository,
+                racunRepository = racunRepository,
+                tipProizvodaRepository = tipProizvodaRepository,
+                proizvodRepository = proizvodRepository
+            )
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideSelectSpendingUseCases (
+        proizvodRepository: ProizvodRepository,
+        tipProizvodaRepository: TipProizvodaRepository,
+        trgovinaRepository: TrgovinaRepository
+    ): SelectSpendingUseCases {
+        return SelectSpendingUseCases(
+            getTrgovineSuspend = GetTrgovineSuspend(trgovinaRepository),
+            getProizvodiSuspend = GetProizvodiSuspend(proizvodRepository),
+            getTipoviProizvodaSuspend = GetTipoviProizvodaSuspend(tipProizvodaRepository)
+        )
+    }
 }

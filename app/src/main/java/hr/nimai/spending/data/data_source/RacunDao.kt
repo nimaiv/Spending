@@ -3,6 +3,7 @@ package hr.nimai.spending.data.data_source
 import androidx.room.*
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.model.Trgovina
+import hr.nimai.spending.domain.util.IznosDatum
 import hr.nimai.spending.domain.util.RacunTrgovina
 import kotlinx.coroutines.flow.Flow
 
@@ -13,6 +14,10 @@ interface RacunDao {
 
     @Query("SELECT id_racuna, broj_racuna, datum_racuna, ukupan_iznos_racuna, naziv_trgovine FROM racun LEFT JOIN trgovina ON racun.id_trgovine = trgovina.id_trgovine ")
     fun getAllWithTrgovine(): Flow<List<RacunTrgovina>>
+
+    @Query("SELECT ukupan_iznos_racuna AS iznos, datum_racuna AS datum FROM racun " +
+            "WHERE id_trgovine = :id_trgovine")
+    suspend fun getRacuniByIdTrgovine(id_trgovine: Int): List<IznosDatum>
 
     @Query("SELECT * FROM racun WHERE id_racuna = :id")
     suspend fun getRacunById(id: Int): Racun?

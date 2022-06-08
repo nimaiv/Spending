@@ -3,6 +3,7 @@ package hr.nimai.spending.data.repository
 import hr.nimai.spending.data.data_source.KupnjaDao
 import hr.nimai.spending.domain.model.Kupnja
 import hr.nimai.spending.domain.repository.KupnjaRepository
+import hr.nimai.spending.domain.util.IznosDatum
 import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +13,14 @@ class KupnjaRepositoryImpl(
 
     override fun getAll(): Flow<List<Kupnja>> {
         return dao.getAll()
+    }
+
+    override suspend fun getKupnjeTrgovine(id_trgovine: Int): List<IznosDatum> {
+        return dao.getKupnjeTrgovine(id_trgovine)
+    }
+
+    override suspend fun getKupnjeTipaProizvoda(id_tipa_proizvoda: Int): List<IznosDatum> {
+        return dao.getKupnjeTipaProizvoda(id_tipa_proizvoda)
     }
 
     override suspend fun getKupnjaById(id_racuna: Int, id_proizvoda: Int): Kupnja? {

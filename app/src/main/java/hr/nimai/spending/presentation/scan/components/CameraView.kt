@@ -17,14 +17,6 @@ fun CameraView(
         ImageCapture.Builder().build()
     }
 
-    /* TODO: Add gallery image load
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { imageProxy: ImageProxy ->
-        if (uri != null) onImageCaptured(true)
-    }
-    */
-
     CameraPreviewView(
         imageCapture = imageCapture
     ) { cameraUIAction ->
@@ -32,14 +24,9 @@ fun CameraView(
             is CameraUIAction.OnCameraClick -> {
                 imageCapture.takePicture(onImageCaptured, onError)
             }
-            is CameraUIAction.OnGalleryViewClick -> {
-
-            }
             is CameraUIAction.OnExitClick -> {
                 onExitClick()
             }
         }
     }
-
-
 }

@@ -49,12 +49,7 @@ fun CameraControls(
                 .border(1.dp, Color.White, CircleShape),
             onClick = { cameraUIAction(CameraUIAction.OnCameraClick) }
         )
-        CameraControl(
-            Icons.Sharp.PhotoLibrary,
-            R.string.cameta_view_load_from_gallery_content_description,
-            modifier = Modifier.size(64.dp),
-            onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
-        )
+        Spacer(modifier = Modifier)
     }
 }
 

@@ -8,3 +8,8 @@ fun getTodayDate(): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy.", Locale.GERMANY)
     return sdf.format(c)
 }
+
+fun getDateFromMillis(millis: Long): String {
+    val sdf = SimpleDateFormat("dd.MM.yyyy.", Locale.GERMANY)
+    return sdf.format(millis)
+}

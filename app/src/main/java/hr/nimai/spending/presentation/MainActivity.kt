@@ -3,6 +3,7 @@ package hr.nimai.spending.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
@@ -16,7 +17,7 @@ import hr.nimai.spending.ui.theme.SpendingTheme
 
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

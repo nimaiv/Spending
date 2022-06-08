@@ -4,6 +4,7 @@ import hr.nimai.spending.data.data_source.RacunDao
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.model.Trgovina
 import hr.nimai.spending.domain.repository.RacunRepository
+import hr.nimai.spending.domain.util.IznosDatum
 import hr.nimai.spending.domain.util.RacunTrgovina
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,10 @@ class RacunRepositoryImpl(
 
     override fun getAllWithTrgovina(): Flow<List<RacunTrgovina>> {
         return dao.getAllWithTrgovine()
+    }
+
+    override suspend fun getRacuniByIdTrgovine(id_trgovine: Int): List<IznosDatum> {
+        return dao.getRacuniByIdTrgovine(id_trgovine)
     }
 
     override suspend fun getRacunById(id: Int): Racun? {

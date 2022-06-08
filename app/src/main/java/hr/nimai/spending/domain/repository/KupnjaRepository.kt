@@ -1,12 +1,17 @@
 package hr.nimai.spending.domain.repository
 
 import hr.nimai.spending.domain.model.Kupnja
+import hr.nimai.spending.domain.util.IznosDatum
 import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
 import kotlinx.coroutines.flow.Flow
 
 interface KupnjaRepository {
 
     fun getAll(): Flow<List<Kupnja>>
+
+    suspend fun getKupnjeTrgovine(id_trgovine: Int): List<IznosDatum>
+
+    suspend fun getKupnjeTipaProizvoda(id_tipa_proizvoda: Int): List<IznosDatum>
 
     suspend fun getKupnjaById(id_racuna: Int, id_proizvoda: Int): Kupnja?
 
