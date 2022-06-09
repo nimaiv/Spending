@@ -10,4 +10,5 @@ data class ProizvodViewUseCases(
     val downloadImage: DownloadImage,
     val deleteProizvodImage: DeleteProizvodImage,
     val updateSlikaProizvoda: UpdateSlikaProizvoda,
+    val updateProizvod: UpdateProizvod
 )

@@ -112,7 +112,7 @@ fun PotrosnjaScreen(
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "Ukupno potrošeno: ${state.ukupno}kn",
+                text = "Ukupno potrošeno: ${String.format("%.2f", state.ukupno)}kn",
                 modifier = Modifier.padding(8.dp)
             )
             Divider(

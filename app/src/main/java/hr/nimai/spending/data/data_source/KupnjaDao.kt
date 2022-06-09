@@ -32,7 +32,7 @@ interface KupnjaDao {
     @Query("SELECT * FROM kupnja WHERE id_racuna = :id_racuna")
     suspend fun getKupnjeByIdRacuna(id_racuna: Int): List<Kupnja>
 
-    @Query("SELECT naziv_proizvoda, skraceni_naziv_proizvoda, kolicina, cijena, kupnja.id_proizvoda as id_proizvoda, barkod " +
+    @Query("SELECT naziv_proizvoda, skraceni_naziv_proizvoda, kolicina, cijena, kupnja.id_proizvoda as id_proizvoda, barkod, tip_proizvoda, uri_slike " +
             "FROM kupnja JOIN proizvod ON kupnja.id_proizvoda = proizvod.id_proizvoda " +
             "WHERE id_racuna = :id_racuna")
     fun getKupnjeProizvodaRacuna(id_racuna: Int): Flow<List<KupnjaProizvodaHolder>>

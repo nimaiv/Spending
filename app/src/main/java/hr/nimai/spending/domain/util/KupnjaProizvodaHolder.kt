@@ -7,6 +7,7 @@ data class KupnjaProizvodaHolder(
     var cijena: Double = 0.00,
     val id_proizvoda: Int = 0,
     val barkod: String? = "",
-    val uriSlike: String? = "",
-    val slika: ByteArray? = null
+    val uri_slike: String? = "",
+    val slika: ByteArray? = null,
+    val tip_proizvoda: Int? = null,
 )

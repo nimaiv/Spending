@@ -89,7 +89,10 @@ class AddRacunViewModel @Inject constructor(
                     kolicinaProizvoda = event.proizvod.kolicina.toString(),
                     isNew = false,
                     barkod = event.proizvod.barkod?: "",
-                    uriSlike = event.proizvod.uriSlike?: ""
+                    uriSlike = event.proizvod.uri_slike?: "",
+                    isNazivEmptyError = false,
+                    isSkraceniNazivEmptyError = false,
+                    showErrorMessage = false,
                 )
             }
             is AddRacunEvent.DismissDialog -> {
@@ -134,7 +137,8 @@ class AddRacunViewModel @Inject constructor(
                 } else {
                     _dialogState.value = dialogState.value.copy(
                         nazivProizvoda = event.value,
-                        isNazivEmptyError = false
+                        isNazivEmptyError = false,
+                        showErrorMessage = false
                     )
                 }
             }
@@ -147,7 +151,8 @@ class AddRacunViewModel @Inject constructor(
                 } else {
                     _dialogState.value = dialogState.value.copy(
                         skraceniNazivProizvoda = event.value,
-                        isSkraceniNazivEmptyError = false
+                        isSkraceniNazivEmptyError = false,
+                        showErrorMessage = false
                     )
                 }
             }
@@ -168,7 +173,7 @@ class AddRacunViewModel @Inject constructor(
                         cijena = dialogState.value.cijenaProizvoda.toDouble(),
                         kolicina = dialogState.value.kolicinaProizvoda.toInt(),
                         barkod = dialogState.value.barkod,
-                        uriSlike = dialogState.value.uriSlike,
+                        uri_slike = dialogState.value.uriSlike,
                         slika = dialogState.value.slika
                     )
                     if (dialogState.value.isNew) {
@@ -257,7 +262,7 @@ class AddRacunViewModel @Inject constructor(
                         kolicina = 1,
                         cijena = 0.00,
                         barkod = proizvod.barkod,
-                        uriSlike = proizvod.uri_slike
+                        uri_slike = proizvod.uri_slike
                     ))
                     _state.value = state.value.copy(
                         proizvodi = proizvodi

@@ -13,20 +13,27 @@ class InsertProizvodiKupnja(
 
     suspend operator fun invoke(proizvodi: List<KupnjaProizvodaHolder>, idRacuna: Int) {
 
-        for (proizvod in proizvodi) {
-            val id = proizvodRepository.insertProizvod(Proizvod(
-                id_proizvoda = proizvod.id_proizvoda,
-                naziv_proizvoda = proizvod.naziv_proizvoda,
-                skraceni_naziv_proizvoda = proizvod.skraceni_naziv_proizvoda,
-                uri_slike = proizvod.uriSlike,
-                barkod = proizvod.barkod
-            )).toInt()
+        for (proizvodKupnja in proizvodi) {
+            val proizvod = Proizvod(
+                id_proizvoda = proizvodKupnja.id_proizvoda,
+                naziv_proizvoda = proizvodKupnja.naziv_proizvoda,
+                skraceni_naziv_proizvoda = proizvodKupnja.skraceni_naziv_proizvoda,
+                uri_slike = proizvodKupnja.uri_slike,
+                barkod = proizvodKupnja.barkod,
+                tip_proizvoda = proizvodKupnja.tip_proizvoda
+            )
+            val id = if (proizvod.id_proizvoda == 0) {
+                proizvodRepository.insertProizvod(proizvod).toInt()
+            } else {
+                proizvodRepository.updateProizvod(proizvod)
+                proizvod.id_proizvoda
+            }
 
             kupnjaRepository.insertKupnja(Kupnja(
                 id_proizvoda = id,
                 id_racuna = idRacuna,
-                kolicina = proizvod.kolicina,
-                cijena = proizvod.cijena
+                kolicina = proizvodKupnja.kolicina,
+                cijena = proizvodKupnja.cijena
             ))
         }
     }

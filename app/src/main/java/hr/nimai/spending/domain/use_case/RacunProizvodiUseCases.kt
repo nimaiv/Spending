@@ -11,5 +11,6 @@ data class RacunProizvodiUseCases(
     val getProizvodInfoFromBarcode: GetProizvodInfoFromBarcode,
     val downloadImage: DownloadImage,
     val getProizvod: GetProizvod,
-    val deleteKupnja: DeleteKupnja
+    val deleteKupnja: DeleteKupnja,
+    val updateKupnjaProizvoda: UpdateKupnjaProizvoda,
 )

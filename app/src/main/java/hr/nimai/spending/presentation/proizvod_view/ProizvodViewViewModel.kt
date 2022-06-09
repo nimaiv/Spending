@@ -88,7 +88,7 @@ class ProizvodViewViewModel @Inject constructor(
                         buttonColor = Color(0xFF1678A3)
                     )
                     viewModelScope.launch {
-                        proizvodViewUseCases.insertProizvod(Proizvod(
+                        proizvodViewUseCases.updateProizvod(Proizvod(
                             id_proizvoda = state.value.idProizvoda,
                             naziv_proizvoda = state.value.nazivProizvoda,
                             skraceni_naziv_proizvoda = state.value.skraceniNazivProizvoda,

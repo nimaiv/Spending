@@ -6,15 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hr.nimai.spending.domain.model.InvalidRacunException
 import hr.nimai.spending.domain.model.Kupnja
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.use_case.RacunProizvodiUseCases
 import hr.nimai.spending.domain.util.KupnjaProizvodaHolder
-import hr.nimai.spending.domain.util.RacunOrder
-import hr.nimai.spending.presentation.add_racun.AddRacunViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -278,18 +275,36 @@ class RacunProizvodiViewModel @Inject constructor(
 
                     try {
                         viewModelScope.launch {
-                            racunProizvodiUseCases.insertKupnjaProizvoda(
-                                kupnjaProizvoda = KupnjaProizvodaHolder(
-                                    id_proizvoda = editKupnjaDialogState.value.idProizvoda?:0,
-                                    naziv_proizvoda = editKupnjaDialogState.value.nazivProizvoda,
-                                    skraceni_naziv_proizvoda = editKupnjaDialogState.value.skraceniNazivProizvoda,
-                                    barkod = editKupnjaDialogState.value.barkod,
-                                    cijena = editKupnjaDialogState.value.cijenaProizvoda.toDouble(),
-                                    kolicina = editKupnjaDialogState.value.kolicinaProizvoda.toInt(),
-                                    uriSlike = editKupnjaDialogState.value.uriSlike
-                                ),
-                                idRacuna = state.value.idRacuna
-                            )
+                            if (editKupnjaDialogState.value.isNew) {
+                                racunProizvodiUseCases.insertKupnjaProizvoda(
+                                    kupnjaProizvoda = KupnjaProizvodaHolder(
+                                        id_proizvoda = editKupnjaDialogState.value.idProizvoda?:0,
+                                        naziv_proizvoda = editKupnjaDialogState.value.nazivProizvoda,
+                                        skraceni_naziv_proizvoda = editKupnjaDialogState.value.skraceniNazivProizvoda,
+                                        barkod = editKupnjaDialogState.value.barkod,
+                                        cijena = editKupnjaDialogState.value.cijenaProizvoda.toDouble(),
+                                        kolicina = editKupnjaDialogState.value.kolicinaProizvoda.toInt(),
+                                        uri_slike = editKupnjaDialogState.value.uriSlike,
+                                        tip_proizvoda = editKupnjaDialogState.value.idTipaProizvoda
+                                    ),
+                                    idRacuna = state.value.idRacuna
+                                )
+                            } else {
+                                racunProizvodiUseCases.updateKupnjaProizvoda(
+                                    kupnjaProizvoda = KupnjaProizvodaHolder(
+                                        id_proizvoda = editKupnjaDialogState.value.idProizvoda?:0,
+                                        naziv_proizvoda = editKupnjaDialogState.value.nazivProizvoda,
+                                        skraceni_naziv_proizvoda = editKupnjaDialogState.value.skraceniNazivProizvoda,
+                                        barkod = editKupnjaDialogState.value.barkod,
+                                        cijena = editKupnjaDialogState.value.cijenaProizvoda.toDouble(),
+                                        kolicina = editKupnjaDialogState.value.kolicinaProizvoda.toInt(),
+                                        uri_slike = editKupnjaDialogState.value.uriSlike,
+                                        tip_proizvoda = editKupnjaDialogState.value.idTipaProizvoda
+                                    ),
+                                    idRacuna = state.value.idRacuna
+                                )
+                            }
+
                             _state.value = state.value.copy(
                                 isEditKupnjaDialogShown = false
                             )
@@ -331,11 +346,12 @@ class RacunProizvodiViewModel @Inject constructor(
                     kolicinaProizvoda = event.kupnjaProizvoda.kolicina.toString(),
                     isNew = false,
                     barkod = event.kupnjaProizvoda.barkod?: "",
-                    uriSlike = event.kupnjaProizvoda.uriSlike?: "",
+                    uriSlike = event.kupnjaProizvoda.uri_slike?: "",
                     isNazivEmptyError = false,
                     isSkraceniNazivEmptyError = false,
                     isKolicinaError = false,
                     isCijenaError = false,
+                    idTipaProizvoda = event.kupnjaProizvoda.tip_proizvoda
                 )
                 _state.value = state.value.copy(
                     isEditKupnjaDialogShown = true
@@ -356,6 +372,7 @@ class RacunProizvodiViewModel @Inject constructor(
                     slika = null,
                     isKolicinaError = false,
                     isCijenaError = false,
+                    idTipaProizvoda = null
                 )
                 _state.value = state.value.copy(
                     isEditKupnjaDialogShown = true
@@ -370,6 +387,7 @@ class RacunProizvodiViewModel @Inject constructor(
                         idProizvoda = proizvod.id_proizvoda,
                         barkod = proizvod.barkod?: "",
                         uriSlike = proizvod.uri_slike?:"",
+                        idTipaProizvoda = proizvod.tip_proizvoda,
                         cijenaProizvoda = "0.00",
                         kolicinaProizvoda = "1",
                         isSkraceniNazivEmptyError = false,

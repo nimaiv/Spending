@@ -122,7 +122,8 @@ object AppModule {
             getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
             downloadImage = DownloadImage(),
             deleteProizvodImage = DeleteProizvodImage(proizvodRepository),
-            updateSlikaProizvoda = UpdateSlikaProizvoda(proizvodRepository)
+            updateSlikaProizvoda = UpdateSlikaProizvoda(proizvodRepository),
+            updateProizvod = UpdateProizvod(proizvodRepository)
         )
     }
 
@@ -145,7 +146,8 @@ object AppModule {
             getProizvodInfoFromBarcode = GetProizvodInfoFromBarcode(),
             downloadImage = DownloadImage(),
             getProizvod = GetProizvod(proizvodRepository),
-            deleteKupnja = DeleteKupnja(kupnjaRepository)
+            deleteKupnja = DeleteKupnja(kupnjaRepository),
+            updateKupnjaProizvoda = UpdateKupnjaProizvoda(proizvodRepository, kupnjaRepository)
         )
     }
 

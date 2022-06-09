@@ -39,7 +39,8 @@ class ExtractProductInfoFromOCR(
                     KupnjaProizvodaHolder(
                         naziv_proizvoda = nazivProizvoda,
                         skraceni_naziv_proizvoda = nazivProizvoda,
-                        kolicina = kolicinaProizvoda
+                        kolicina = kolicinaProizvoda,
+                        id_proizvoda = 0
                     )
                 }
                 proizvodi.add(proizvod)

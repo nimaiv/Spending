@@ -14,6 +14,7 @@ data class EditKupnjaDialogState(
     val isNew: Boolean = false,
     val uriSlike: String = "",
     val slika: ByteArray? = null,
-    val idProizvoda: Int? = null
+    val idProizvoda: Int? = null,
+    val idTipaProizvoda: Int? = null
 
 )
