@@ -8,8 +8,7 @@ class ReadOCRToRacun {
     operator fun invoke(ocrTekst: String): Racun {
 
 
-        // TODO: Update brojRacunaRegex to match other patterns
-        val brojRacunaRegex = Regex("""([\d]{5}/[\d]{5}/[\d]{3})""")
+        val brojRacunaRegex = Regex("""([\d]{2,6}/[\d]{2,6}/[\d]{2,5})""")
 
         val datumRegex = Regex("""([\d]{2}\.[\d]{2}\.[\d]{4})""")
         val ukupanIznosRegex = Regex("""ukupno\n.*?\n*([\d]+\.[\d]{2})""", RegexOption.IGNORE_CASE)

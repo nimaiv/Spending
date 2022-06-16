@@ -22,7 +22,9 @@ fun TrgovinaDialog(
         },
         title = {
             Text(
-                text = "Nova trgovina",
+                text = if(state.isNew) {
+                    "Nova trgovina"
+                } else {"Uredi trgovinu"},
                 modifier = Modifier.padding(8.dp),
                 style = MaterialTheme.typography.h6
             )
@@ -58,12 +60,14 @@ fun TrgovinaDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Divider(thickness = 4.dp, modifier = Modifier.padding(4.dp))
-                Button(
-                    onClick = { viewModel.onEvent(TrgovineEvent.DeleteTrgovina) },
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red, contentColor = Color.White)
-                ) {
-                    Text(text = "Obriši")
+                if (!state.isNew) {
+                    Button(
+                        onClick = { viewModel.onEvent(TrgovineEvent.DeleteTrgovina) },
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red, contentColor = Color.White)
+                    ) {
+                        Text(text = "Obriši")
+                    }
                 }
             }
         },

@@ -116,7 +116,7 @@ fun ProizvodViewScreen(
                     onClick = { viewModel.onEvent(ProizvodViewEvent.ToggleEdit(context)) },
                     modifier = Modifier
                         .padding(horizontal = 8.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = state.value.buttonColor)
+                    colors = ButtonDefaults.buttonColors(backgroundColor = state.value.buttonColor, contentColor = Color.White)
                 ) {
                     Text(
                         text = state.value.buttonText,

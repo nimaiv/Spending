@@ -10,4 +10,5 @@ data class TrgovineState(
     val idTrgovine: Int = 0,
     val isNazivError: Boolean = false,
     val showError: Boolean = false,
+    val isNew: Boolean = true,
 )

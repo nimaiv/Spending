@@ -55,6 +55,7 @@ class TrgovineViewModel @Inject constructor(
                     adresaTrgovine = "",
                     idTrgovine = 0,
                     isNazivError = true,
+                    isNew = true,
                 )
             }
             is TrgovineEvent.SaveTrgovina -> {
@@ -88,7 +89,8 @@ class TrgovineViewModel @Inject constructor(
                     adresaTrgovine = event.trgovina.adresa?:"",
                     idTrgovine = event.trgovina.id_trgovine,
                     isDialogOpen = true,
-                    isNazivError = false
+                    isNazivError = false,
+                    isNew = false
                 )
             }
             is TrgovineEvent.DeleteTrgovina -> {

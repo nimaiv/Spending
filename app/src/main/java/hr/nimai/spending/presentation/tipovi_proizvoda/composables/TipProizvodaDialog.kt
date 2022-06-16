@@ -42,7 +42,7 @@ fun TipProizvodaDialog(
                         onClick = {
                             viewModel.onEvent(TipoviProizvodaEvent.DeleteTipProizvoda)
                         },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red, contentColor = Color.White)
                     ) {
                         Text(text = "Obriši")
                     }
