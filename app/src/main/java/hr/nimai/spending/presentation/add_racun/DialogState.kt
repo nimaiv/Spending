@@ -16,4 +16,5 @@ data class DialogState(
     val isNew: Boolean = false,
     val uriSlike: String = "",
     val slika: ByteArray? = null,
+    val idProizvoda: Int = 0,
 )

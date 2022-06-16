@@ -93,6 +93,7 @@ class AddRacunViewModel @Inject constructor(
                     isNazivEmptyError = false,
                     isSkraceniNazivEmptyError = false,
                     showErrorMessage = false,
+                    idProizvoda = event.proizvod.id_proizvoda
                 )
             }
             is AddRacunEvent.DismissDialog -> {
@@ -174,7 +175,8 @@ class AddRacunViewModel @Inject constructor(
                         kolicina = dialogState.value.kolicinaProizvoda.toInt(),
                         barkod = dialogState.value.barkod,
                         uri_slike = dialogState.value.uriSlike,
-                        slika = dialogState.value.slika
+                        slika = dialogState.value.slika,
+                        id_proizvoda = dialogState.value.idProizvoda
                     )
                     if (dialogState.value.isNew) {
                         proizvodi.add(proizvod)
@@ -249,6 +251,7 @@ class AddRacunViewModel @Inject constructor(
                     isSkraceniNazivEmptyError = true,
                     isNazivEmptyError = true,
                     slika = null,
+                    idProizvoda = 0,
                 )
             }
             is AddRacunEvent.AddExistingProizvod -> {
