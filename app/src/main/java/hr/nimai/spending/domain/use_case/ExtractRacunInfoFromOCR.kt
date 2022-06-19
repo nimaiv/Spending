@@ -3,7 +3,7 @@ package hr.nimai.spending.domain.use_case
 import hr.nimai.spending.domain.model.Racun
 import hr.nimai.spending.domain.util.getTodayDate
 
-class ReadOCRToRacun {
+class ExtractRacunInfoFromOCR {
 
     operator fun invoke(ocrTekst: String): Racun {
 

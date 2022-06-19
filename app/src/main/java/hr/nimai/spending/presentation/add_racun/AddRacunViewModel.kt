@@ -39,7 +39,7 @@ class AddRacunViewModel @Inject constructor(
 
     init {
         val ocrText = savedStateHandle.get<String>("ocrText")
-        val racun = addRacunUseCases.readOCRToRacun(ocrText!!)
+        val racun = addRacunUseCases.extractRacunInfoFromOCR(ocrText!!)
 
         _state.value = state.value.copy(
             slika = savedStateHandle.get<ByteArray>("image"),

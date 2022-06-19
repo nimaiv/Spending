@@ -85,7 +85,7 @@ object AppModule {
     ): AddRacunUseCases {
         return AddRacunUseCases(
             insertRacun = InsertRacun(racunRepository),
-            readOCRToRacun = ReadOCRToRacun(),
+            extractRacunInfoFromOCR = ExtractRacunInfoFromOCR(),
             extractProductInfoFromOCR = ExtractProductInfoFromOCR(proizvodRepository),
             insertProizvodiKupnja = InsertProizvodiKupnja(proizvodRepository, kupnjaRepository),
             getProizvod = GetProizvod(proizvodRepository),
