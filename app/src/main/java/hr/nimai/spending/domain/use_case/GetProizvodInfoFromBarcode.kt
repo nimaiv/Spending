@@ -12,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class GetProizvodInfoFromBarcode {
 
     operator fun invoke(barcode: String, onResponseSuccess: (ProductsJSON?) -> Unit) {
+
         val retro = Retrofit.Builder()
             .baseUrl(URL_BARCODE_API)
             .addConverterFactory(GsonConverterFactory.create())
@@ -20,7 +21,6 @@ class GetProizvodInfoFromBarcode {
         val service = retro.create(GetProizvodFromBarcodeService::class.java)
 
         val proizvodRequest = service.listProizvodi(API_KEY, barcode)
-
 
         proizvodRequest.enqueue(object : Callback<ProductsJSON> {
             override fun onResponse(
@@ -34,9 +34,7 @@ class GetProizvodInfoFromBarcode {
             override fun onFailure(call: Call<ProductsJSON>, t: Throwable) {
                 Log.e("GetProizvodInfoFromBarcode", "Failed request!: ${t.message}")
             }
-
         })
-
     }
 
     companion object {

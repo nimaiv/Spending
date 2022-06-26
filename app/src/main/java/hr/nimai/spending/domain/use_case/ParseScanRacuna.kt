@@ -10,8 +10,12 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 class ParseScanRacuna {
     operator fun invoke(imageProxy: ImageProxy, onRecognitionComplete: (ocrText: String) -> Unit) {
 
+        val inputImage = imageProxy.image?.let {
+            InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
+        }
+
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        val inputImage = imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
+
         inputImage?.let {
             recognizer.process(it).addOnSuccessListener { visionText ->
                 val ocrText = visionText.text
